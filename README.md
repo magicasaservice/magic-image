@@ -1,6 +1,6 @@
-# 🏎️ Minimal Turborepo Starter
+# 👁️ Magic Image
 
-> Opinionated starter for projects utilizing [Turborepo](https://turbo.build/repo)
+> Image component for Nuxt that just works
 
 ## 📦 Apps and Packages
 

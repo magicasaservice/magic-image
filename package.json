@@ -1,20 +1,44 @@
 {
-  "name": "turborepo-starter",
+  "name": "@maas/magic-image",
   "private": true,
   "author": "Robin Scholz <https://github.com/robinscholz>, Christoph Jeworutzki <https://github.com/ChristophJeworutzki>",
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --parallel",
+    "dev:nuxt": "turbo run dev --filter=nuxt",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "uninstall": "pnpm dlx rimraf --glob ./**/node_modules"
+    "build": "turbo run build",
+    "uninstall": "pnpm dlx rimraf --glob ./**/node_modules --glob ./**/pnpm-lock.yaml",
+    "release": "turbo run t:release && release-it"
   },
   "devDependencies": {
+    "@release-it/bumper": "^6.0.1",
     "@turbo/gen": "^1.9.7",
     "config": "workspace:*",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
+    "release-it": "^17.1.1",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.9.2"
+  "volta": {
+    "node": "18.16.0"
+  },
+  "release-it": {
+    "git": {
+      "requireCleanWorkingDir": true
+    },
+    "npm": {
+      "allowSameVersion": true
+    },
+    "plugins": {
+      "@release-it/bumper": {
+        "in": "package.json",
+        "out": [
+          "package.json",
+          "packages/*/package.json",
+          "apps/*/package.json"
+        ]
+      }
+    }
+  }
 }
