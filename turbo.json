@@ -6,13 +6,13 @@
       "cache": false,
       "dependsOn": ["nuxt#build"]
     },
+    "test": {},
     "lint": {},
     "dev": {
       "cache": false,
       "persistent": true
     },
     "build": {
-      "dependsOn": ["^build"],
       "outputs": ["./dist/**"]
     },
     "nuxt#dev": {
