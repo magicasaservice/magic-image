@@ -1,6 +1,5 @@
 {
   "name": "@maas/magic-image",
-  "private": true,
   "author": "Robin Scholz <https://github.com/robinscholz>, Christoph Jeworutzki <https://github.com/ChristophJeworutzki>",
   "exports": {
     ".": {
