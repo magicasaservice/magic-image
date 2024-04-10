@@ -39,7 +39,10 @@
       "requireCleanWorkingDir": true
     },
     "npm": {
-      "allowSameVersion": true
+      "allowSameVersion": true,
+      "publishConfig": {
+        "access": "public"
+      }
     },
     "plugins": {
       "@release-it/bumper": {
