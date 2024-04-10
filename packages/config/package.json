@@ -2,7 +2,7 @@
   "name": "config",
   "private": true,
   "author": "Robin Scholz <https://github.com/robinscholz>, Christoph Jeworutzki <https://github.com/ChristophJeworutzki>",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "files": [
     "eslint-typescript-preset.js",
     "prettier-preset.js",
