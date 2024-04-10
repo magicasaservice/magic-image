@@ -1,5 +1,5 @@
 {
-  "name": "nuxt",
+  "name": "nuxt-module",
   "private": true,
   "author": "Robin Scholz <https://github.com/robinscholz>, Christoph Jeworutzki <https://github.com/ChristophJeworutzki>",
   "type": "module",
@@ -27,6 +27,10 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.11.2"
+  },
+  "peerDependencies": {
+    "@nuxt/image": "^1.5.0",
+    "@unlazy/nuxt": "^0.11.3"
   },
   "devDependencies": {
     "@types/node": "^20.12.4",
