@@ -2,6 +2,18 @@
   "name": "@maas/magic-image",
   "private": true,
   "author": "Robin Scholz <https://github.com/robinscholz>, Christoph Jeworutzki <https://github.com/ChristophJeworutzki>",
+  "exports": {
+    ".": {
+      "import": "./dist/nuxt/module.mjs",
+      "require": "./dist/nuxt/module.cjs",
+      "types": "./dist/nuxt/types.d.ts"
+    }
+  },
+  "types": "./dist/nuxt/types.d.ts",
+  "main": "./dist/nuxt/module.mjs",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "turbo run dev --parallel",
     "dev:nuxt": "turbo run dev --filter=nuxt",
