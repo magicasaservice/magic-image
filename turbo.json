@@ -4,7 +4,7 @@
   "pipeline": {
     "//#t:release": {
       "cache": false,
-      "dependsOn": ["nuxt#build"]
+      "dependsOn": ["nuxt-module#build"]
     },
     "test": {},
     "lint": {},
@@ -19,7 +19,7 @@
       "cache": false,
       "persistent": true
     },
-    "nuxt#build": {
+    "nuxt-module#build": {
       "outputs": ["dist/nuxt/*"]
     }
   }
