@@ -15,12 +15,12 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
-    "prepack": "nuxt-module-build build",
+    "build": "nuxt-module-build build --outDir ../../dist/nuxt && pnpm dlx nuxi prepare ./playground",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch"
