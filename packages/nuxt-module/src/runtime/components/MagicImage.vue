@@ -4,6 +4,7 @@
     :auto-sizes="autoSizes"
     :preload="preload"
     :lazy-load="lazyload"
+    class="magic-image"
   />
 </template>
 
