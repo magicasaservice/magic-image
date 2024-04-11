@@ -5,12 +5,14 @@
     :auto-sizes="autoSizes"
     :preload="preload"
     :lazy-load="lazyload"
+    @loaded="onLoaded"
     class="magic-image"
+    :class="{ 'magic-image--loaded': loaded }"
   />
 </template>
 
 <script lang="ts" setup>
-import { useImage, useHead, computed, useRuntimeConfig } from '#imports'
+import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 import type { ModuleOptions } from '../../module'
 import type { ImageOptions } from '@nuxt/image'
@@ -41,6 +43,10 @@ const props = withDefaults(defineProps<Props>(), {
   modifiers: undefined,
 })
 
+const emit = defineEmits(['loaded'])
+
+const loaded = ref(false)
+
 const { getSizes } = useImage()
 
 const computedImageSizes = computed(() =>
@@ -65,5 +71,10 @@ if (props.preload) {
       },
     ],
   })
+}
+
+function onLoaded() {
+  emit('loaded')
+  loaded.value = true
 }
 </script>
