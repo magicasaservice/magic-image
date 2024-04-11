@@ -1,5 +1,6 @@
 <template>
   <un-lazy-image
+    placeholder-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     :src-set="computedImageSizes?.srcset"
     :auto-sizes="autoSizes"
     :preload="preload"
