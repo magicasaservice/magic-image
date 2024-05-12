@@ -20,7 +20,7 @@ import type { ImageOptions } from '@nuxt/image'
 const options = useRuntimeConfig().public.magicImage as ModuleOptions
 
 interface Props
-  extends Pick<
+  extends /* @vue-ignore */ Pick<
     ImageOptions,
     'provider' | 'preset' | 'densities' | 'modifiers'
   > {
