@@ -13,6 +13,10 @@
       <magic-image
         class="w-full"
         src="https://images.unsplash.com/photo-1712666410511-4e84e3db6457"
+        :modifiers="{
+          ar: '1:1',
+          fit: 'crop',
+        }"
       />
     </div>
   </div>

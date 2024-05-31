@@ -1,13 +1,13 @@
 <template>
   <un-lazy-image
+    class="magic-image"
+    :class="{ 'magic-image--loaded': loaded }"
     placeholder-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     :src-set="computedImageSizes?.srcset"
     :auto-sizes="autoSizes"
     :preload="preload"
     :lazy-load="lazyload"
     @loaded="onLoaded"
-    class="magic-image"
-    :class="{ 'magic-image--loaded': loaded }"
   />
 </template>
 
@@ -15,7 +15,7 @@
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 import type { ModuleOptions } from '../../module'
-import type { ImageOptions } from '@nuxt/image'
+import type { ImageOptions, ImageModifiers } from '@nuxt/image'
 
 const options = useRuntimeConfig().public.magicImage as ModuleOptions
 
@@ -29,6 +29,9 @@ interface Props
   sizes?: Record<string, string | number> | string
   autoSizes?: boolean
   lazyload?: boolean
+  preset?: string
+  densities?: string
+  modifiers?: Partial<ImageModifiers>
 }
 
 const props = withDefaults(defineProps<Props>(), {
