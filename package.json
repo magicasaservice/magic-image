@@ -1,4 +1,5 @@
 {
+  "version": "0.0.5",
   "name": "@maas/magic-image",
   "author": "Robin Scholz <https://github.com/robinscholz>, Christoph Jeworutzki <https://github.com/ChristophJeworutzki>",
   "exports": {
@@ -66,6 +67,5 @@
         ]
       }
     }
-  },
-  "version": "0.0.5"
+  }
 }
