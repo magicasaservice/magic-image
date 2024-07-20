@@ -2,7 +2,7 @@
   <un-lazy-image
     class="magic-image"
     :class="{ 'magic-image--loaded': loaded }"
-    placeholder-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    :placeholder-src="placeholderSrc"
     :src-set="computedImageSizes?.srcset"
     :auto-sizes="autoSizes"
     :preload="preload"
@@ -15,50 +15,47 @@
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 import type { ModuleOptions } from '../../module'
-import type { ImageOptions, ImageModifiers } from '@nuxt/image'
+import type { ImageOptions } from '@nuxt/image'
 
 const options = useRuntimeConfig().public.magicImage as ModuleOptions
 
 interface Props
   extends /* @vue-ignore */ Pick<
     ImageOptions,
-    'provider' | 'preset' | 'densities' | 'modifiers'
+    'provider' | 'preset' | 'modifiers'
   > {
+  placeholderSrc?: string
   src: string
   preload?: boolean
   sizes?: Record<string, string | number> | string
   autoSizes?: boolean
   lazyload?: boolean
-  preset?: string
-  densities?: string
-  modifiers?: Partial<ImageModifiers>
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  alt: undefined,
+  placeholderSrc:
+    'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
   preload: false,
   sizes: undefined,
   autoSizes: true,
   lazyload: true,
   provider: undefined,
   preset: undefined,
-  densities: undefined,
   modifiers: undefined,
 })
 
 const emit = defineEmits(['loaded'])
-
-const loaded = ref(false)
-
 const { getSizes } = useImage()
+const loaded = ref(false)
 
 const computedImageSizes = computed(() =>
   getSizes(props.src, {
     sizes: props.sizes || options?.sizes,
-    provider: props.provider,
-    preset: props.preset,
-    densities: props.densities,
     modifiers: props.modifiers,
+    options: {
+      provider: props.provider,
+      preset: props.preset,
+    },
   })
 )
 
