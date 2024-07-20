@@ -33,7 +33,7 @@
     "turbo": "^1.13.3"
   },
   "peerDependencies": {
-    "@nuxt/image": "^1.5.0",
+    "@nuxt/image": "^1.7.0",
     "@unlazy/nuxt": "^0.11.3"
   },
   "peerDependenciesMeta": {
@@ -67,5 +67,6 @@
         ]
       }
     }
-  }
+  },
+  "packageManager": "pnpm@9.5.0"
 }
