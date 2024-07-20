@@ -15,15 +15,15 @@
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 import type { ModuleOptions } from '../../module'
-import type { ImageOptions } from '@nuxt/image'
+import type { ImageModifiers } from '@nuxt/image'
 
 const options = useRuntimeConfig().public.magicImage as ModuleOptions
 
-interface Props
-  extends /* @vue-ignore */ Pick<
-    ImageOptions,
-    'provider' | 'preset' | 'modifiers'
-  > {
+interface Props {
+  provider?: string
+  preset?: string
+  densities?: string
+  modifiers?: Partial<ImageModifiers>
   placeholderSrc?: string
   src: string
   preload?: boolean
@@ -52,10 +52,9 @@ const computedImageSizes = computed(() =>
   getSizes(props.src, {
     sizes: props.sizes || options?.sizes,
     modifiers: props.modifiers,
-    options: {
-      provider: props.provider,
-      preset: props.preset,
-    },
+    provider: props.provider,
+    preset: props.preset,
+    densities: props.densities,
   })
 )
 
