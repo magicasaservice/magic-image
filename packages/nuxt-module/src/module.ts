@@ -4,25 +4,29 @@ import {
   createResolver,
   installModule,
 } from '@nuxt/kit'
+import { defu } from 'defu'
 
-import defu from 'defu'
-
-import type { ModuleOptions as NuxtImageModuleOptions } from '@nuxt/image'
+import type {
+  ModuleOptions as NuxtImageModuleOptions,
+  ImageModifiers,
+} from '@nuxt/image'
 import type { ModuleOptions as UnlazyModuleOptions } from '@unlazy/nuxt'
 
-// Module options TypeScript interface definition
+// Module options
 export interface ModuleOptions {
   sizes: Record<string, string | number> | string
   image: Partial<NuxtImageModuleOptions>
   unlazy: UnlazyModuleOptions
 }
 
+// Re-export Image modifiers
+export interface MagicImageModifiers extends ImageModifiers {}
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'magic-image',
     configKey: 'magicImage',
   },
-  // Default configuration options of the Nuxt module
   defaults: {
     sizes: '128w:128px 512w:512px 720w:720px 1024w:1024px 1440w:1440px',
     image: {} as NuxtImageModuleOptions,
@@ -45,10 +49,8 @@ export default defineNuxtModule<ModuleOptions>({
       options
     )
 
-    // Install the `@nuxt/image` module
+    // Install dependencies
     await installModule('@nuxt/image', options.image)
-
-    // Install the `@unlazy/nuxt` module
     await installModule('@unlazy/nuxt', options.unlazy)
   },
 })

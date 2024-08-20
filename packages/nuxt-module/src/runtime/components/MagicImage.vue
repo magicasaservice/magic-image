@@ -14,12 +14,13 @@
 <script lang="ts" setup>
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
+
 import type { ModuleOptions } from '../../module'
 import type { ImageModifiers } from '@nuxt/image'
 
 const options = useRuntimeConfig().public.magicImage as ModuleOptions
 
-interface Props {
+interface MagicImageProps {
   provider?: string
   preset?: string
   densities?: string
@@ -32,7 +33,7 @@ interface Props {
   lazyload?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<MagicImageProps>(), {
   placeholderSrc:
     'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
   preload: false,

@@ -18,8 +18,16 @@
     "defu": "^6.1.4"
   },
   "peerDependencies": {
-    "@nuxt/image": "^1.5.0",
+    "@nuxt/image": "^1.7.0",
     "@unlazy/nuxt": "^0.11.3"
+  },
+  "peerDependenciesMeta": {
+    "@nuxt/image": {
+      "optional": false
+    },
+    "@unlazy/nuxt": {
+      "optional": false
+    }
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
