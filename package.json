@@ -25,12 +25,12 @@
   },
   "devDependencies": {
     "@release-it/bumper": "^6.0.1",
-    "@turbo/gen": "^1.13.3",
+    "@turbo/gen": "^2.1.0",
     "config": "workspace:*",
-    "eslint": "^9.3.0",
-    "prettier": "^3.2.5",
-    "release-it": "^17.3.0",
-    "turbo": "^1.13.3"
+    "eslint": "^9.9.1",
+    "prettier": "^3.3.3",
+    "release-it": "^17.6.0",
+    "turbo": "^2.1.0"
   },
   "peerDependencies": {
     "@nuxt/image": "^1.7.0",
