@@ -27,7 +27,7 @@
     "@release-it/bumper": "^6.0.1",
     "@turbo/gen": "^2.2.3",
     "config": "workspace:*",
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "prettier": "^3.3.3",
     "release-it": "^17.10.0",
     "turbo": "^2.2.3"
