@@ -3,7 +3,7 @@
 
 # Magic Image 🪄 🖼️
 
-Magic Image is a modern, flexible, and powerful image component for Nuxt applications. It wraps the best features of [Unlazy](https://github.com/johannschopplich/unlazy) and [Nuxt Image](https://github.com/nuxt/image) into a single, plug-and-play package. With Magic Image, you can effortlessly integrate advanced image handling capabilities into your project and benefit from effortless autosizes and best practice lazy loading.
+Magic Image is a modern, flexible, and powerful image component for Nuxt applications. It wraps the best features of [Unlazy](https://github.com/johannschopplich/unlazy) and [Nuxt Image](https://github.com/nuxt/image) into a single, plug-and-play module. With Magic Image, you can effortlessly integrate advanced image handling capabilities into your project and benefit from effortless autosizes and best practice lazy loading.
 
 ---
 
