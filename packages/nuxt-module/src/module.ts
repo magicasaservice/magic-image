@@ -1,15 +1,19 @@
+import { defu } from 'defu'
+
 import {
   defineNuxtModule,
   addComponent,
   createResolver,
   installModule,
 } from '@nuxt/kit'
-import { defu } from 'defu'
+
+import type { NuxtModule } from '@nuxt/schema'
 
 import type {
   ModuleOptions as NuxtImageModuleOptions,
   ImageModifiers,
 } from '@nuxt/image'
+
 import type { ModuleOptions as UnlazyModuleOptions } from '@unlazy/nuxt'
 
 // Module options
@@ -22,7 +26,8 @@ export interface ModuleOptions {
 // Re-export Image modifiers
 export type MagicImageModifiers = ImageModifiers
 
-export default defineNuxtModule<ModuleOptions>({
+// Define the module
+const magicImageModule = defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'magic-image',
     configKey: 'magicImage',
@@ -54,3 +59,6 @@ export default defineNuxtModule<ModuleOptions>({
     await installModule('@unlazy/nuxt', options.unlazy)
   },
 })
+
+// Explicitly export the module as a NuxtModule
+export default magicImageModule as NuxtModule<ModuleOptions>
