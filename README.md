@@ -95,6 +95,12 @@ Magic Image provides a unified API for all your image needs. Here’s an example
 
 ---
 
+## 🐛 Found a Bug?
+
+If you see something that doesn’t look right, [submit a bug report](https://github.com/magicasaservice/magic-image/issues/new?assignees=&labels=bug%2Cpending+triage&template=bug_report.yml). See it. Say it. Sorted.
+
+---
+
 ## 📜 License
 
 Magic Image is released under the **MIT License**.
