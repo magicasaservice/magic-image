@@ -7,8 +7,6 @@ import {
   installModule,
 } from '@nuxt/kit'
 
-import type { NuxtModule } from '@nuxt/schema'
-
 import type {
   ModuleOptions as NuxtImageModuleOptions,
   ImageModifiers,
@@ -27,7 +25,7 @@ export interface ModuleOptions {
 export type MagicImageModifiers = ImageModifiers
 
 // Define the module
-const magicImageModule = defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'magic-image',
     configKey: 'magicImage',
@@ -59,6 +57,3 @@ const magicImageModule = defineNuxtModule<ModuleOptions>({
     await installModule('@unlazy/nuxt', options.unlazy)
   },
 })
-
-// Explicitly export the module as a NuxtModule
-export default magicImageModule as NuxtModule<ModuleOptions>

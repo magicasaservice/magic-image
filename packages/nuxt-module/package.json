@@ -5,7 +5,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "nuxt-module-build build --outDir ../../dist/nuxt && pnpm dlx nuxi prepare ./playground",
+    "build": "nuxt-module-build build --outDir ../../dist/nuxt && nuxi prepare playground",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
@@ -37,7 +37,7 @@
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@types/node": "^22.10.2",
     "nuxt": "^3.14.1592",
-    "typescript": "^5.7.2",
+    "typescript": "~5.6.3",
     "vitest": "^2.1.8"
   },
   "version": "0.0.10"
