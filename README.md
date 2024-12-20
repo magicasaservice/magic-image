@@ -1,3 +1,4 @@
+![NPM Version](https://img.shields.io/npm/v/%40maas%2Fmagic-image)
 ![NPM Downloads](https://img.shields.io/npm/dm/%40maas%2Fmagic-image)
 
 # Magic Image 🪄 🖼️
