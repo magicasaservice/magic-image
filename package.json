@@ -24,7 +24,7 @@
     "release": "turbo run t:release && release-it"
   },
   "devDependencies": {
-    "@maas/config": "^1.0.0",
+    "@maas/config": "^1.2.0",
     "@release-it/bumper": "^6.0.1",
     "@turbo/gen": "^2.3.3",
     "release-it": "^17.10.0",

@@ -20,7 +20,7 @@ export interface ModuleOptions {
 }
 
 // Re-export Image modifiers
-export interface MagicImageModifiers extends ImageModifiers {}
+export type MagicImageModifiers = ImageModifiers
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

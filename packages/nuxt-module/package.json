@@ -37,6 +37,7 @@
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@types/node": "^22.10.2",
     "nuxt": "^3.14.1592",
+    "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   },
   "version": "0.0.10"
