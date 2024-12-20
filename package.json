@@ -24,11 +24,9 @@
     "release": "turbo run t:release && release-it"
   },
   "devDependencies": {
+    "@maas/config": "^1.0.0",
     "@release-it/bumper": "^6.0.1",
     "@turbo/gen": "^2.3.3",
-    "config": "workspace:*",
-    "eslint": "^9.17.0",
-    "prettier": "^3.4.2",
     "release-it": "^17.10.0",
     "turbo": "^2.3.3"
   },
@@ -45,7 +43,7 @@
     }
   },
   "volta": {
-    "node": "18.16.0"
+    "node": "20.18.1"
   },
   "release-it": {
     "git": {
