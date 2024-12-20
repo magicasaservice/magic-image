@@ -51,7 +51,7 @@ const loaded = ref(false)
 
 const computedImageSizes = computed(() =>
   getSizes(props.src, {
-    sizes: props.sizes || options?.sizes,
+    sizes: props.sizes ?? options?.sizes,
     modifiers: props.modifiers,
     provider: props.provider,
     preset: props.preset,
