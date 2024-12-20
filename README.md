@@ -1,6 +1,9 @@
-# Magic Image 🪄 🖼️
+![NPM Version](https://img.shields.io/npm/v/%40maas%2Fmagic-image)
+![NPM Downloads](https://img.shields.io/npm/dm/%40maas%2Fmagic-image)
 
-Magic Image is a modern, flexible, and powerful image component for Nuxt applications. It wraps the best features of [Unlazy](https://github.com/johannschopplich/unlazy) and [Nuxt Image](https://github.com/nuxt/image) into a single, plug-and-play package. With Magic Image, you can effortlessly integrate advanced image handling capabilities into your project and benefit from effortless autosizes and best practice lazy loading.
+# 🪄 🖼️ Magic Image
+
+Magic Image is a modern, flexible image component for Nuxt applications. It wraps the best features of [Unlazy](https://github.com/johannschopplich/unlazy) and [Nuxt Image](https://github.com/nuxt/image) into a single, ready-to-use Nuxt module. With Magic Image, you can effortlessly integrate advanced image handling capabilities into your project and benefit from dynamic sizing and best practice lazy loading.
 
 ---
 
@@ -16,7 +19,7 @@ Magic Image is a modern, flexible, and powerful image component for Nuxt applica
 
 ---
 
-## 📥 Installation
+## 📦 Install
 
 Install the package using your preferred package manager:
 
@@ -33,13 +36,13 @@ yarn add @magic-image/nuxt
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Configure
 
 To use Magic Image in your Nuxt app, register it as a module and configure it in your `nuxt.config.ts` file. Below is an example configuration:
 
 ```ts
 export default defineNuxtConfig({
-  modules: ['@magic-image/nuxt'],
+  modules: ['@maas/magic-image/nuxt'],
   magicImage: {
     sizes: '256w:256px 960w:960px 1440w:1440px', // optional srcset custom sizes
     // See: https://image.nuxt.com/get-started/configuration
@@ -81,7 +84,7 @@ Magic Image provides a unified API for all your image needs. Here’s an example
 1. **🔗 Seamless Integration**: Combines the power of Unlazy and Nuxt Image into one package.
 2. **📦 Customizable Providers**: Support for popular CDNs, including Unsplash, MUX, and Shopify (coming soon).
 3. **⚙️ Flexibility**: Easily configure sizes, lazy loading, and more.
-4. **⚡ Performance Optimization**: Automatically delivers optimized images for better user experience.
+4. **⚡ Performance Optimization**: Automatically delivers optimized images for a better user experience.
 
 ---
 
@@ -92,7 +95,14 @@ Magic Image provides a unified API for all your image needs. Here’s an example
 
 ---
 
-## 📜 License
+## 🐛 Found a Bug?
 
-Magic Image is released under the **MIT License**.
+If you see something that doesn't look right, [submit a bug report](https://github.com/magicasaservice/magic-timer/issues/new?assignees=&labels=bug%2Cpending+triage&template=bug_report.yml).
+> See it. Say it. Sorted.
+
+---
+
+## 📄 License
+
+[MIT License](https://github.com/magicasaservice/magic-image/blob/main/LICENSE) © 2024-PRESENT [Magic as a Service GmbH](https://github.com/magicasaservice)
 
