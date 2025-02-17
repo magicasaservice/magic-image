@@ -30,14 +30,16 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build": "turbo run build",
     "uninstall": "pnpm dlx rimraf --glob ./**/node_modules --glob ./**/pnpm-lock.yaml",
-    "release": "turbo run t:release && release-it"
+    "release": "turbo run t:release && release-it",
+    "update:deps": "pnpm dlx taze -r -w",
+    "update:deps:major": "pnpm dlx taze major -r -w"
   },
   "devDependencies": {
-    "@maas/config": "^1.2.1",
+    "@maas/config": "^1.6.0",
     "@release-it/bumper": "^6.0.1",
-    "@turbo/gen": "^2.3.3",
+    "@turbo/gen": "^2.3.7",
     "release-it": "^17.11.0",
-    "turbo": "^2.3.3"
+    "turbo": "^2.3.7"
   },
   "peerDependencies": {
     "@nuxt/image": "^1.7.0",
@@ -54,26 +56,5 @@
   "volta": {
     "node": "20.18.1"
   },
-  "release-it": {
-    "git": {
-      "requireCleanWorkingDir": true
-    },
-    "npm": {
-      "allowSameVersion": true,
-      "publishConfig": {
-        "access": "public"
-      }
-    },
-    "plugins": {
-      "@release-it/bumper": {
-        "in": "package.json",
-        "out": [
-          "package.json",
-          "packages/*/package.json",
-          "apps/*/package.json"
-        ]
-      }
-    }
-  },
-  "packageManager": "pnpm@9.5.0"
+  "packageManager": "pnpm@9.15.5"
 }
