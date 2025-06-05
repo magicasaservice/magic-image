@@ -45,28 +45,33 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
       global: true,
     })
 
-    // Create provider config once
-    const maasProvider = {
-      name: 'maas',
-      provider: resolver.resolve('./runtime/providers/maas'),
-      options: {
-        ...options.image.maas,
+    // Define all custom providers
+    const providers = {
+      maas: {
+        name: 'maas',
+        provider: resolver.resolve('./runtime/providers/maas'),
+        options: {
+          ...options.image.maas,
+        },
+      },
+      mux: {
+        name: 'mux',
+        provider: resolver.resolve('./runtime/providers/mux'),
+        options: {
+          ...options.image.mux,
+        },
       },
     }
 
-    // Prepare image module options with custom provider
+    // Prepare image module options with custom providers
     const imageOptions = defu(options.image, {
-      providers: {
-        maas: maasProvider,
-      },
+      providers: providers,
     })
 
     // Add module options to public runtime config
     nuxt.options.runtimeConfig.public.magicImage = {
       sizes: options.sizes,
-      providers: {
-        maas: maasProvider,
-      },
+      providers: providers,
       ...options.unlazy, // Include unlazy options if needed client-side
     }
 
