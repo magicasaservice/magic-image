@@ -44,16 +44,33 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
     })
 
-    // Add module options to public runtime config
-    nuxt.options.runtimeConfig.public.magicImage = defu(
-      {
-        sizes: options.sizes,
+    // Custom provider for MaaS
+    const maasProvider = {
+      name: 'maas',
+      provider: resolver.resolve('./runtime/providers/maas'),
+      options: {
+        ...options.image.maas,
       },
-      options
-    )
+    }
 
-    // Install dependencies
-    await installModule('@nuxt/image', options.image)
+    // Prepare image module options with custom provider
+    const imageOptions = defu(options.image, {
+      providers: {
+        maas: maasProvider,
+      },
+    })
+
+    // Add module options to public runtime config
+    nuxt.options.runtimeConfig.public.magicImage = {
+      sizes: options.sizes,
+      providers: {
+        maas: maasProvider,
+      },
+      ...options.unlazy, // Include unlazy options if needed client-side
+    }
+
+    // Install dependencies with merged options
+    await installModule('@nuxt/image', imageOptions)
     await installModule('@unlazy/nuxt', options.unlazy)
   },
 })
