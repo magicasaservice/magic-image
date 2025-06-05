@@ -13,6 +13,7 @@ import type {
 } from '@nuxt/image'
 
 import type { ModuleOptions as UnlazyModuleOptions } from '@unlazy/nuxt'
+import type { NuxtModule } from '@nuxt/schema'
 
 // Module options
 export interface ModuleOptions {
@@ -24,8 +25,8 @@ export interface ModuleOptions {
 // Re-export Image modifiers
 export type MagicImageModifiers = ImageModifiers
 
-// Define the module
-export default defineNuxtModule<ModuleOptions>({
+// Define the module with explicit return type
+const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'magic-image',
     configKey: 'magicImage',
@@ -44,7 +45,7 @@ export default defineNuxtModule<ModuleOptions>({
       global: true,
     })
 
-    // Custom provider for MaaS
+    // Create provider config once
     const maasProvider = {
       name: 'maas',
       provider: resolver.resolve('./runtime/providers/maas'),
@@ -74,3 +75,5 @@ export default defineNuxtModule<ModuleOptions>({
     await installModule('@unlazy/nuxt', options.unlazy)
   },
 })
+
+export default module
