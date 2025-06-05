@@ -21,7 +21,7 @@
       "persistent": true
     },
     "nuxt-module#build": {
-      "outputs": ["dist/nuxt/*"]
+      "outputs": ["../../dist/nuxt/**"]
     }
   }
 }
