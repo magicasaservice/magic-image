@@ -66,17 +66,22 @@ export const getImage: ProviderGetImage = (
   src: string,
   options: ImageOptions
 ) => {
+  const filename = src.substring(src.lastIndexOf('/') + 1)
+
   const modifiers = Object.fromEntries(
     Object.entries(options.modifiers || {}).map(([key, value]) => [
       key,
       value != null ? String(value) : value,
     ])
   )
+
   const operations = operationsGenerator({
+    filename: encodeURIComponent(filename),
     we: 'true',
     ...modifiers,
     url: encodeURIComponent(src),
   }).replace('=true', '')
+
   return {
     url: withBase(
       operations.length ? '?' + operations : '',
