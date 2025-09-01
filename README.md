@@ -25,13 +25,13 @@ Install the package using your preferred package manager:
 
 ```bash
 # npm
-npm install @magic-image/nuxt
+npm install @maas/magic-image
 
 # pnpm
-pnpm add @magic-image/nuxt
+pnpm add @maas/magic-image
 
 # yarn
-yarn add @magic-image/nuxt
+yarn add @maas/magic-image
 ```
 
 ---
@@ -42,7 +42,7 @@ To use Magic Image in your Nuxt app, register it as a module and configure it in
 
 ```ts
 export default defineNuxtConfig({
-  modules: ['@maas/magic-image/nuxt'],
+  modules: ['@maas/magic-image'],
   magicImage: {
     sizes: '256w:256px 960w:960px 1440w:1440px', // optional srcset custom sizes
     // See: https://image.nuxt.com/get-started/configuration
