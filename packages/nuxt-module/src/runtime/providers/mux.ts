@@ -7,7 +7,7 @@ const operationsGenerator = createOperationsGenerator()
 
 interface MuxOptions {
   modifiers?: {
-    format?: 'png' | 'jpg' | 'webp'
+    format?: 'png' | 'jpg' | 'webp' | 'gif'
     width?: number
     height?: number
     quality?: number
@@ -34,7 +34,7 @@ export default defineProvider<MuxOptions>({
     let width = modifiers.width || 0
     let height = modifiers.height || 0
 
-    if (width > 640 || height > 640) {
+    if (isAnimated && (width > 640 || height > 640)) {
       console.warn('[nuxt-image] [mux] Width and height should not exceed 640px.')
       width = Math.min(width, 640)
       height = Math.min(height, 640)
