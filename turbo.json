@@ -5,7 +5,7 @@
   "tasks": {
     "//#t:release": {
       "cache": false,
-      "dependsOn": ["nuxt-module#build"]
+      "dependsOn": ["test", "nuxt#build"]
     },
     "test": {},
     "lint": {},
@@ -20,7 +20,7 @@
       "cache": false,
       "persistent": true
     },
-    "nuxt-module#build": {
+    "nuxt#build": {
       "outputs": ["../../dist/nuxt/**"]
     }
   }

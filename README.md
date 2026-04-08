@@ -1,108 +1,200 @@
 ![NPM Version](https://img.shields.io/npm/v/%40maas%2Fmagic-image)
 ![NPM Downloads](https://img.shields.io/npm/dm/%40maas%2Fmagic-image)
 
-# 🪄 🖼️ Magic Image
+# Magic Image
 
-Magic Image is a modern, flexible image component for Nuxt applications. It wraps the best features of [Unlazy](https://github.com/johannschopplich/unlazy) and [Nuxt Image](https://github.com/nuxt/image) into a single, ready-to-use Nuxt module. With Magic Image, you can effortlessly integrate advanced image handling capabilities into your project and benefit from dynamic sizing and best practice lazy loading.
-
----
-
-## ✨ Key Benefits
-
-- **🌟 Auto-lazy Loading**: Optimize load times with automatic lazy loading.
-- **📐 Dynamic Sizing**: Automatically adjust image sizes for different devices.
-- **⚡ Optimized Loading**: Deliver the most efficient images for your users.
-- **🔗 Unified API**: A single API for all your favorite image CDNs.
-- **📦 Extended Providers**:
-  - **🎥 MUX Video Thumbnails**: Seamlessly fetch video thumbnails from MUX (coming soon) ([Documentation](https://docs.mux.com/guides/get-images-from-a-video)).
-  - **🛍️ Shopify Image CDN**: Support for Shopify images (coming soon) ([Documentation](https://cdn.shopify.com/)).
+Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) and [Unlazy](https://unlazy.byjohann.dev) into a single component with automatic lazy loading, responsive srcsets, and built-in support for the MaaS and Mux image providers.
 
 ---
 
-## 📦 Install
+## Key Benefits
 
-Install the package using your preferred package manager:
+- **Auto lazy loading** — Native lazy loading via Unlazy with SSR placeholder support
+- **Responsive srcsets** — Automatic multi-size srcset generation via Nuxt Image
+- **Built-in providers** — MaaS image CDN and Mux video thumbnail extraction out of the box
+- **Typed modifiers** — Full TypeScript types for all provider-specific modifier options
+
+---
+
+## Install
+
+Install the package and its peer dependencies:
 
 ```bash
 # npm
-npm install @maas/magic-image
+npm install @maas/magic-image @nuxt/image @unlazy/nuxt
 
 # pnpm
-pnpm add @maas/magic-image
+pnpm add @maas/magic-image @nuxt/image @unlazy/nuxt
 
 # yarn
-yarn add @maas/magic-image
+yarn add @maas/magic-image @nuxt/image @unlazy/nuxt
 ```
+
+> **Tip:** This package ships with an `.npmrc` that sets `auto-install-peers=true`. With **pnpm**, this means `@nuxt/image` and `@unlazy/nuxt` are installed automatically alongside `@maas/magic-image` — a single `pnpm add @maas/magic-image` is enough. **npm 7+** auto-installs peer deps by default too. **Yarn** always requires manual peer dep installation as shown above.
 
 ---
 
-## ⚙️ Configure
+## Configure
 
-To use Magic Image in your Nuxt app, register it as a module and configure it in your `nuxt.config.ts` file. Below is an example configuration:
+Register the module in your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
   modules: ['@maas/magic-image'],
   magicImage: {
-    sizes: '256w:256px 960w:960px 1440w:1440px', // optional srcset custom sizes
-    // See: https://image.nuxt.com/get-started/configuration
+    // Default srcset breakpoints (optional)
+    sizes: '128w:128px 512w:512px 720w:720px 1024w:1024px 1440w:1440px',
+    // Passed to @nuxt/image — see https://image.nuxt.com/get-started/configuration
     image: {
-      provider: 'unsplash',
-      unsplash: {
-        baseURL: '',
-        modifiers: {
-          auto: 'format,compress',
-        },
-      },
+      provider: 'maas',
     },
-    // See: https://unlazy.byjohann.dev/integrations/nuxt.html#module-options
+    // Passed to @unlazy/nuxt — see https://unlazy.byjohann.dev/integrations/nuxt.html
     unlazy: {
-       ssr: true,
+      ssr: true,
     },
   },
-});
+})
 ```
 
 ---
 
-## 🔧 Usage
+## Usage
 
-Magic Image provides a unified API for all your image needs. Here’s an example of how to use it in a Nuxt component:
+The `<MagicImage>` component is registered globally — no import needed.
 
 ```vue
 <template>
-  <div>
-    <magic-image src="https://images.unsplash.com/photo-1694444070793-13db645409f4" />
-  </div>
+  <MagicImage
+    src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+    :modifiers="{ width: 800, height: 600, fit: 'cover' }"
+  />
 </template>
 ```
 
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | — | Image source URL (required) |
+| `provider` | `string` | module default | Provider name (`'maas'`, `'mux'`, or any Nuxt Image provider) |
+| `modifiers` | `Partial<MagicImageModifiers>` | — | Provider-specific image transformations |
+| `sizes` | `string \| Record<string, string \| number>` | module default | Responsive size breakpoints |
+| `preset` | `string` | — | Nuxt Image preset name |
+| `densities` | `string` | — | Device density descriptors (e.g. `'1x 2x'`) |
+| `placeholderSrc` | `string` | 1×1 GIF | Placeholder shown while loading |
+| `preload` | `boolean` | `false` | Add `<link rel="preload">` to `<head>` |
+| `autoSizes` | `boolean` | `true` | Auto-compute sizes attribute |
+| `lazyload` | `boolean` | `true` | Enable lazy loading |
+
+### Events
+
+| Event | Description |
+|-------|-------------|
+| `loaded` | Fired when the image has finished loading |
+
 ---
 
-## 🚀 Features
+## Providers
 
-1. **🔗 Seamless Integration**: Combines the power of Unlazy and Nuxt Image into one package.
-2. **📦 Customizable Providers**: Support for popular CDNs, including Unsplash, MUX, and Shopify (coming soon).
-3. **⚙️ Flexibility**: Easily configure sizes, lazy loading, and more.
-4. **⚡ Performance Optimization**: Automatically delivers optimized images for a better user experience.
+### MaaS
+
+Built-in provider for the [MaaS image CDN](https://img.maas.earth). Set `provider: 'maas'` (or use it as the default provider) and pass any of the supported modifiers:
+
+```vue
+<MagicImage
+  src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+  provider="maas"
+  :modifiers="{
+    width: 800,
+    height: 600,
+    fit: 'cover',
+    format: 'webp',
+    quality: 80,
+  }"
+/>
+```
+
+**MaaS modifiers:**
+
+| Modifier | Type | Description |
+|----------|------|-------------|
+| `width` | `number` | Output width in px |
+| `height` | `number` | Output height in px |
+| `fit` | `'cover' \| 'contain' \| 'fill' \| 'inside' \| 'outside'` | Resize fit mode |
+| `format` | `'jpg' \| 'jpeg' \| 'png' \| 'webp'` | Output format |
+| `quality` | `number` | Output quality (1–100) |
+| `pixelDensity` | `number` | Device pixel ratio (e.g. `2` for 2×) |
+| `blur` | `number` | Blur radius |
+| `sharpen` | `number` | Sharpening strength |
+| `brightness` | `number` | Brightness adjustment |
+| `contrast` | `number` | Contrast adjustment |
+| `saturation` | `number` | Saturation adjustment |
+| `hue` | `number` | Hue rotation in degrees |
+| `gamma` | `number` | Gamma correction |
+| `filter` | `'greyscale' \| 'sepia' \| 'negative' \| 'duotone'` | Color filter |
+| `rotate` | `number` | Rotation in degrees |
+| `mirror` | `boolean` | Flip horizontally |
+| `mask` | `'circle' \| 'ellipse' \| 'triangle' \| 'pentagon' \| 'hexagon' \| 'square' \| 'star' \| 'heart' \| …` | Shape mask |
+| `background` | `string` | Background color |
+| `trimImage` | `boolean` | Auto-trim whitespace |
+
+### Mux
+
+Built-in provider for [Mux video thumbnail extraction](https://docs.mux.com/guides/get-images-from-a-video). Pass the full Mux thumbnail URL as `src` and set `provider="mux"`:
+
+```vue
+<MagicImage
+  src="https://image.mux.com/YOUR_PLAYBACK_ID/thumbnail.jpg"
+  provider="mux"
+  :modifiers="{
+    width: 1280,
+    height: 720,
+    fit: 'cover',
+    time: 12,
+  }"
+/>
+```
+
+**Mux modifiers:**
+
+| Modifier | Type | Description |
+|----------|------|-------------|
+| `width` | `number` | Thumbnail width in px |
+| `height` | `number` | Thumbnail height in px |
+| `fit` | `'cover' \| 'contain' \| 'fill' \| 'pad' \| 'smartcrop'` | Resize fit mode |
+| `time` | `number` | Timestamp in seconds to extract thumbnail from |
+| `rotate` | `number` | Rotation in degrees |
+| `flipHorizontal` | `boolean` | Flip horizontally |
+| `flipVertical` | `boolean` | Flip vertically |
+| `start` | `number` | Clip start time |
+| `end` | `number` | Clip end time |
+| `fps` | `number` | Frames per second (for animated thumbnails) |
 
 ---
 
-## 🗺️ Roadmap
+## TypeScript
 
-- [ ] Add MUX Video Thumbnail support.
-- [ ] Shopify Image CDN integration.
+Import `MagicImageModifiers` for typed modifier objects:
+
+```ts
+import type { MagicImageModifiers } from '@maas/magic-image'
+
+const modifiers: Partial<MagicImageModifiers> = {
+  width: 800,
+  format: 'webp',
+  filter: 'greyscale',
+}
+```
 
 ---
 
 ## 🐛 Found a Bug?
 
-If you see something that doesn't look right, [submit a bug report](https://github.com/magicasaservice/magic-timer/issues/new?assignees=&labels=bug%2Cpending+triage&template=bug_report.yml).
-> See it. Say it. Sorted.
+[Submit a bug report](https://github.com/magicasaservice/magic-image/issues/new?assignees=&labels=bug%2Cpending+triage&template=bug_report.yml)
 
 ---
 
-## 📄 License
+## License
 
 [MIT License](https://github.com/magicasaservice/magic-image/blob/main/LICENSE) © 2024-PRESENT [Magic as a Service GmbH](https://github.com/magicasaservice)
-

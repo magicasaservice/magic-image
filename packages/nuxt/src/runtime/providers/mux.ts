@@ -1,6 +1,5 @@
 import { withQuery } from 'ufo'
-import { createOperationsGenerator } from '#image'
-import type { ProviderGetImage } from '@nuxt/image'
+import { createOperationsGenerator, defineProvider } from '@nuxt/image/runtime'
 
 const operationsGenerator = createOperationsGenerator({
   keyMap: {
@@ -36,11 +35,13 @@ const operationsGenerator = createOperationsGenerator({
   formatter: (key: string, value: string) => `${key}=${value}`,
 })
 
-export const getImage: ProviderGetImage = (src, { modifiers = {} } = {}) => {
-  const operations = operationsGenerator(modifiers)
-  const params = new URLSearchParams(operations)
-  const queryObject = Object.fromEntries(params.entries())
-  return {
-    url: withQuery(src, queryObject),
-  }
-}
+export default defineProvider({
+  getImage(src, { modifiers = {} }) {
+    const operations = operationsGenerator(modifiers)
+    const params = new URLSearchParams(operations)
+    const queryObject = Object.fromEntries(params.entries())
+    return {
+      url: withQuery(src, queryObject),
+    }
+  },
+})

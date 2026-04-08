@@ -1,6 +1,5 @@
 import { withBase } from 'ufo'
-import { createOperationsGenerator } from '#image'
-import type { ProviderGetImage, ImageOptions } from '@nuxt/image'
+import { createOperationsGenerator, defineProvider } from '@nuxt/image/runtime'
 
 const operationsGenerator = createOperationsGenerator({
   keyMap: {
@@ -62,30 +61,29 @@ const operationsGenerator = createOperationsGenerator({
   formatter: (key, value) => `${key}=${value}`,
 })
 
-export const getImage: ProviderGetImage = (
-  src: string,
-  options: ImageOptions
-) => {
-  const filename = src.substring(src.lastIndexOf('/') + 1)
+export default defineProvider({
+  getImage(src, { modifiers = {} }) {
+    const filename = src.substring(src.lastIndexOf('/') + 1)
 
-  const modifiers = Object.fromEntries(
-    Object.entries(options.modifiers || {}).map(([key, value]) => [
-      key,
-      value != null ? String(value) : value,
-    ])
-  )
+    const stringModifiers = Object.fromEntries(
+      Object.entries(modifiers).map(([key, value]) => [
+        key,
+        value != null ? String(value) : value,
+      ])
+    )
 
-  const operations = operationsGenerator({
-    filename: encodeURIComponent(filename),
-    we: 'true',
-    ...modifiers,
-    url: encodeURIComponent(src),
-  }).replace('=true', '')
+    const operations = operationsGenerator({
+      filename: encodeURIComponent(filename),
+      we: 'true',
+      ...stringModifiers,
+      url: encodeURIComponent(src),
+    }).replace('=true', '')
 
-  return {
-    url: withBase(
-      operations.length ? '?' + operations : '',
-      'https://img.maas.earth'
-    ),
-  }
-}
+    return {
+      url: withBase(
+        operations.length ? '?' + operations : '',
+        'https://img.maas.earth'
+      ),
+    }
+  },
+})

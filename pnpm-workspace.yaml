@@ -3,3 +3,5 @@ packages:
   - apps/*
   - '!packages/nuxt/playground'
   - '!packages/nuxt/test'
+allowBuilds:
+  esbuild: false

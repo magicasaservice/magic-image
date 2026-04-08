@@ -15,8 +15,7 @@
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 
-import type { ModuleOptions } from '../../module'
-import type { ImageModifiers } from '@nuxt/image'
+import type { ModuleOptions, MagicImageModifiers } from '../../module'
 
 const options = useRuntimeConfig().public.magicImage as ModuleOptions
 
@@ -25,7 +24,7 @@ interface MagicImageProps {
   provider?: string
   preset?: string
   densities?: string
-  modifiers?: Partial<ImageModifiers>
+  modifiers?: Partial<MagicImageModifiers>
   placeholderSrc?: string
   preload?: boolean
   sizes?: Record<string, string | number> | string

@@ -22,8 +22,42 @@ export interface ModuleOptions {
   unlazy: UnlazyModuleOptions
 }
 
-// Re-export Image modifiers
-export type MagicImageModifiers = ImageModifiers
+// Extended modifiers covering all maas + mux provider params
+export type MagicImageModifiers = Omit<ImageModifiers, 'fit'> & {
+  fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' | 'pad' | 'smartcrop'
+  // MaaS
+  pixelDensity?: number
+  trimImage?: boolean
+  sharpen?: number
+  brightness?: number
+  saturation?: number
+  hue?: number
+  filter?: 'greyscale' | 'sepia' | 'negative' | 'duotone'
+  gamma?: number
+  contrast?: number
+  blur?: number
+  mirror?: boolean
+  mask?:
+    | 'circle'
+    | 'ellipse'
+    | 'triangle'
+    | 'triangle-180'
+    | 'pentagon'
+    | 'pentagon-180'
+    | 'hexagon'
+    | 'square'
+    | 'star'
+    | 'heart'
+  maskTrim?: boolean
+  maskBackground?: string
+  // Mux
+  time?: number
+  flipHorizontal?: boolean
+  flipVertical?: boolean
+  start?: number
+  end?: number
+  fps?: number
+}
 
 // Define the module with explicit return type
 const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
@@ -46,25 +80,26 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
     })
 
     // Define all custom providers
+    const imageOptions = options.image as Record<string, unknown>
     const providers = {
       maas: {
         name: 'maas',
         provider: resolver.resolve('./runtime/providers/maas'),
         options: {
-          ...options.image.maas,
+          ...(imageOptions.maas as Record<string, unknown>),
         },
       },
       mux: {
         name: 'mux',
         provider: resolver.resolve('./runtime/providers/mux'),
         options: {
-          ...options.image.mux,
+          ...(imageOptions.mux as Record<string, unknown>),
         },
       },
     }
 
     // Prepare image module options with custom providers
-    const imageOptions = defu(options.image, {
+    const mergedImageOptions = defu(options.image, {
       providers: providers,
     })
 
@@ -76,7 +111,7 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
     }
 
     // Install dependencies with merged options
-    await installModule('@nuxt/image', imageOptions)
+    await installModule('@nuxt/image', mergedImageOptions)
     await installModule('@unlazy/nuxt', options.unlazy)
   },
 })

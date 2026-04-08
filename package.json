@@ -26,6 +26,7 @@
   "scripts": {
     "dev": "turbo run dev --parallel",
     "dev:nuxt": "turbo run dev --filter=nuxt",
+    "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build": "turbo run build",
@@ -35,15 +36,15 @@
     "update:deps:major": "pnpm dlx taze major -r -w"
   },
   "devDependencies": {
-    "@maas/config": "^1.6.0",
-    "@release-it/bumper": "^6.0.1",
-    "@turbo/gen": "^2.5.4",
-    "release-it": "^17.11.0",
-    "turbo": "^2.5.4"
+    "@maas/config": "^1.13.0",
+    "@release-it/bumper": "^7.0.5",
+    "@turbo/gen": "^2.9.5",
+    "release-it": "^19.2.4",
+    "turbo": "^2.9.5"
   },
   "peerDependencies": {
-    "@nuxt/image": "^1.7.0",
-    "@unlazy/nuxt": "^0.11.3"
+    "@nuxt/image": "^2.0.0",
+    "@unlazy/nuxt": "^1.1.0"
   },
   "peerDependenciesMeta": {
     "@nuxt/image": {
@@ -56,5 +57,5 @@
   "volta": {
     "node": "20.18.1"
   },
-  "packageManager": "pnpm@10.11.1"
+  "packageManager": "pnpm@10.33.0"
 }
