@@ -5,7 +5,7 @@
   "tasks": {
     "//#t:release": {
       "cache": false,
-      "dependsOn": ["test", "nuxt#build"]
+      "dependsOn": ["nuxt#test", "nuxt#build"]
     },
     "test": {},
     "lint": {},
