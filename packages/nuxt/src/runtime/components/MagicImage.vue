@@ -15,9 +15,9 @@
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 
-import type { ModuleOptions, MagicImageModifiers } from '../../module'
+import type { MagicImageRuntimeConfig, MagicImageModifiers } from '../../module'
 
-const options = useRuntimeConfig().public.magicImage as ModuleOptions
+const options = useRuntimeConfig().public.magicImage as MagicImageRuntimeConfig
 
 interface MagicImageProps {
   src: string

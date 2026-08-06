@@ -22,6 +22,15 @@ export interface ModuleOptions {
   unlazy: UnlazyModuleOptions
 }
 
+// Shape of the public runtime config actually written by the module
+export interface MagicImageRuntimeConfig extends UnlazyModuleOptions {
+  sizes: ModuleOptions['sizes']
+  providers: Record<
+    string,
+    { name: string; provider: string; options: Record<string, unknown> }
+  >
+}
+
 // Extended modifiers covering all maas + mux provider params
 export type MagicImageModifiers = Omit<ImageModifiers, 'fit'> & {
   fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' | 'pad' | 'smartcrop'
