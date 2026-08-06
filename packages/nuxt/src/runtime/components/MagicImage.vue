@@ -7,7 +7,7 @@
     :auto-sizes="autoSizes"
     :preload="preload"
     :lazy-load="lazyload"
-    @loaded="onLoaded"
+    @image-load="onLoaded"
   />
 </template>
 

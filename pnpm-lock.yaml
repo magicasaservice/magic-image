@@ -12,8 +12,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.10.1)(magicast@0.5.2)
       '@unlazy/nuxt':
-        specifier: ^1.1.0
-        version: 1.1.0(magicast@0.5.2)
+        specifier: ^2.0.1
+        version: 2.0.1(magicast@0.5.2)
     devDependencies:
       '@maas/config':
         specifier: ^1.13.0
@@ -40,8 +40,8 @@ importers:
         specifier: ^4.4.2
         version: 4.4.2(magicast@0.5.2)
       '@unlazy/nuxt':
-        specifier: ^1.1.0
-        version: 1.1.0(magicast@0.5.2)
+        specifier: ^2.0.1
+        version: 2.0.1(magicast@0.5.2)
       defu:
         specifier: ^6.1.7
         version: 6.1.7
@@ -2610,11 +2610,11 @@ packages:
     peerDependencies:
       vue: '>=3.5.18'
 
-  '@unlazy/core@1.1.0':
-    resolution: {integrity: sha512-ezCESX729KqtP2hud3i0ucepMx5/tz4V9Z4KKHInIgcoqOz/vP9LpEDVl3hkkRfPuuv33C2YUOApMJECEai1Dw==}
+  '@unlazy/core@2.0.1':
+    resolution: {integrity: sha512-zARfhkFhALS5EGdym22E8OrNSEbHDhG8XBUFHr8I435U7JnM8r4Y8g6I+utdKMrxJARcAJx7WGDUo/h9CntWCg==}
 
-  '@unlazy/nuxt@1.1.0':
-    resolution: {integrity: sha512-P5kPaxiOzKeRgrjjgFx5cwMZfWkPOWVARpaJP7MOelSoXhbPwQaYO1r1fJPYjfmyhzcaS6goOvUIc5UcOmI3AA==}
+  '@unlazy/nuxt@2.0.1':
+    resolution: {integrity: sha512-jxaU/rzpDsj8XB4DzsNBUBtXFBE6o640t1nKZ6nrbjD5bx/LgpsZLKwh3xPltSSiOg/KHMegOIL0BzUzRObk4w==}
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -6400,8 +6400,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unlazy@1.1.0:
-    resolution: {integrity: sha512-uF2b6FL74e+EiUKywBWW+6ExLlZ0YrLEQFXromG1/eY1EfUh+AL1onEDv8WxRcDpDpOZyvtryQU4Unxhpb4Hvg==}
+  unlazy@2.0.1:
+    resolution: {integrity: sha512-BihVSf6XpmWzcXfkDFih+R2s2sbiyi5oJiH7ed3CzMZqXBmdbal5iTz77bglCL9jZJZ0i/7NP6oPU/JHx63mZA==}
 
   unplugin-utils@0.2.4:
     resolution: {integrity: sha512-8U/MtpkPkkk3Atewj1+RcKIjb5WBimZ/WSLhhR3w6SsIj8XJuKTacSP8g+2JhfSGw0Cb125Y+2zA/IzJZDVbhA==}
@@ -9433,13 +9433,13 @@ snapshots:
       unhead: 2.1.13
       vue: 3.5.32(typescript@6.0.2)
 
-  '@unlazy/core@1.1.0': {}
+  '@unlazy/core@2.0.1': {}
 
-  '@unlazy/nuxt@1.1.0(magicast@0.5.2)':
+  '@unlazy/nuxt@2.0.1(magicast@0.5.2)':
     dependencies:
       '@nuxt/kit': 4.4.2(magicast@0.5.2)
       defu: 6.1.7
-      unlazy: 1.1.0
+      unlazy: 2.0.1
     transitivePeerDependencies:
       - magicast
 
@@ -13877,9 +13877,9 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unlazy@1.1.0:
+  unlazy@2.0.1:
     dependencies:
-      '@unlazy/core': 1.1.0
+      '@unlazy/core': 2.0.1
 
   unplugin-utils@0.2.4:
     dependencies:
