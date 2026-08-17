@@ -88,7 +88,8 @@ Staying on `@unlazy/nuxt` v1 with this release will make `<MagicImage>` silently
 
 Releases before `0.0.11` predate this changelog. See the [release history](https://github.com/magicasaservice/magic-image/releases) for details.
 
-[Unreleased]: https://github.com/magicasaservice/magic-image/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/magicasaservice/magic-image/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/magicasaservice/magic-image/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/magicasaservice/magic-image/compare/0.0.14...0.1.0
 [0.0.14]: https://github.com/magicasaservice/magic-image/compare/0.0.13...0.0.14
 [0.0.13]: https://github.com/magicasaservice/magic-image/compare/0.0.12...0.0.13
