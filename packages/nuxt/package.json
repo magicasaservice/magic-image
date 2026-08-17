@@ -23,21 +23,11 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
+    "@nuxt/image": "^2.0.0",
     "@nuxt/kit": "^4.4.2",
+    "@unlazy/nuxt": "^2.0.1",
     "defu": "^6.1.7",
     "ufo": "^1.6.3"
-  },
-  "peerDependencies": {
-    "@nuxt/image": "^2.0.0",
-    "@unlazy/nuxt": "^2.0.1"
-  },
-  "peerDependenciesMeta": {
-    "@nuxt/image": {
-      "optional": false
-    },
-    "@unlazy/nuxt": {
-      "optional": false
-    }
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",

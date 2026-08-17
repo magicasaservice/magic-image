@@ -11,9 +11,18 @@ importers:
       '@nuxt/image':
         specifier: ^2.0.0
         version: 2.0.0(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.10.1)(magicast@0.5.2)
+      '@nuxt/kit':
+        specifier: ^4.4.2
+        version: 4.4.2(magicast@0.5.2)
       '@unlazy/nuxt':
         specifier: ^2.0.1
         version: 2.0.1(magicast@0.5.2)
+      defu:
+        specifier: ^6.1.7
+        version: 6.1.7
+      ufo:
+        specifier: ^1.6.3
+        version: 1.6.3
     devDependencies:
       '@maas/config':
         specifier: ^1.13.0

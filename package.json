@@ -35,24 +35,19 @@
     "update:deps": "pnpm dlx taze -r -w",
     "update:deps:major": "pnpm dlx taze major -r -w"
   },
+  "dependencies": {
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/kit": "^4.4.2",
+    "@unlazy/nuxt": "^2.0.1",
+    "defu": "^6.1.7",
+    "ufo": "^1.6.3"
+  },
   "devDependencies": {
     "@maas/config": "^1.13.0",
     "@release-it/bumper": "^7.0.5",
     "@turbo/gen": "^2.9.5",
     "release-it": "^19.2.4",
     "turbo": "^2.9.5"
-  },
-  "peerDependencies": {
-    "@nuxt/image": "^2.0.0",
-    "@unlazy/nuxt": "^2.0.1"
-  },
-  "peerDependenciesMeta": {
-    "@nuxt/image": {
-      "optional": false
-    },
-    "@unlazy/nuxt": {
-      "optional": false
-    }
   },
   "volta": {
     "node": "24.18.0"
