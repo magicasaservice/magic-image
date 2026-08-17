@@ -79,13 +79,35 @@ The `<MagicImage>` component is registered globally — no import needed.
 | `src` | `string` | — | Image source URL (required) |
 | `provider` | `string` | module default | Provider name (`'maas'`, `'mux'`, or any Nuxt Image provider) |
 | `modifiers` | `Partial<MagicImageModifiers>` | — | Provider-specific image transformations |
-| `sizes` | `string \| Record<string, string \| number>` | module default | Responsive size breakpoints |
+| `sizes` | `string \| Record<string, string \| number>` | module default | Responsive size breakpoints — the width the image is displayed at, per screen |
 | `preset` | `string` | — | Nuxt Image preset name |
 | `densities` | `string` | — | Device density descriptors (e.g. `'1x 2x'`) |
 | `placeholderSrc` | `string` | 1×1 GIF | Placeholder shown while loading |
 | `preload` | `boolean` | `false` | Add `<link rel="preload">` to `<head>` |
-| `autoSizes` | `boolean` | `true` | Auto-compute sizes attribute |
+| `autoSizes` | `boolean` | `true` | Measure the element instead of using the declared `sizes` |
 | `lazyload` | `boolean` | `true` | Enable lazy loading |
+
+### Sizes
+
+A srcset alone does not decide which candidate the browser downloads — it resolves the candidates against the image’s `sizes` attribute. Get `sizes` wrong and the browser picks a candidate that is too small, then upscales it.
+
+`autoSizes` is on by default, so the element measures itself: `sizes` is rendered as `auto` and Unlazy keeps it in line with the element’s layout width. Reach for it whenever the image’s width follows the layout.
+
+Turn `autoSizes` off to declare the width yourself. The `sizes` prop is rendered as the `sizes` attribute, one entry per screen:
+
+```vue
+<MagicImage
+  src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+  sizes="640w:100vw 1024w:50vw"
+  :auto-sizes="false"
+/>
+```
+
+The same `sizes` value also decides which srcset candidates are generated, and the module option applies to every image. So declare a per-image `sizes` prop whenever an image is displayed at a different width than the module default describes.
+
+Both paths describe the element’s **layout** width. An image painted with `object-fit: cover` covers more width than its box whenever the box is taller than the image’s own aspect ratio. Lay such an image out at the size the crop paints, or every candidate is measured against a box narrower than what ends up on screen.
+
+`sizes="auto"` is only valid on a lazy loaded image. With `lazyload` off, no `sizes` attribute is rendered and the browser assumes the image spans the full viewport width.
 
 ### Events
 

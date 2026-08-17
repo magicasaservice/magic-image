@@ -4,6 +4,7 @@
     :data-loaded="loaded"
     :placeholder-src="placeholderSrc"
     :src-set="computedImageSizes?.srcset"
+    :sizes="sizesAttribute"
     :auto-sizes="autoSizes"
     :preload="preload"
     :lazy-load="lazyload"
@@ -58,6 +59,13 @@ const computedImageSizes = computed(() =>
     densities: densities,
   })
 )
+
+const sizesAttribute = computed(() => {
+  if (!autoSizes) {
+    return computedImageSizes.value?.sizes
+  }
+  return lazyload ? 'auto' : undefined
+})
 
 if (preload) {
   useHead({
