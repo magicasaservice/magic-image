@@ -37,7 +37,14 @@ export interface MagicImageRuntimeConfig extends UnlazyModuleOptions {
 
 // Extended modifiers covering all maas + mux provider params
 export type MagicImageModifiers = Omit<ImageModifiers, 'fit'> & {
-  fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' | 'pad' | 'smartcrop'
+  fit?:
+    | 'cover'
+    | 'contain'
+    | 'fill'
+    | 'inside'
+    | 'outside'
+    | 'pad'
+    | 'smartcrop'
   // MaaS
   pixelDensity?: number
   trimImage?: boolean
@@ -83,7 +90,9 @@ function resolvePackageDir(pkg: string): string | undefined {
     const pkgJson = join(dir, 'package.json')
     if (existsSync(pkgJson)) {
       try {
-        if (JSON.parse(readFileSync(pkgJson, 'utf8')).name === pkg) return dir
+        if (JSON.parse(readFileSync(pkgJson, 'utf8')).name === pkg) {
+          return dir
+        }
       } catch {
         // Ignore unreadable package.json and keep walking up
       }
@@ -152,36 +161,37 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
     // not resolvable from the app's `.nuxt` directory, which breaks the type
     // augmentations both modules generate (`declare module '@nuxt/image'`).
     // Register tsconfig `paths` so those specifiers resolve for type checking.
-    nuxt.hook(
-      'prepare:types',
-      ({ tsConfig, nodeTsConfig, sharedTsConfig }) => {
-        const paths: Record<string, string[]> = {}
+    nuxt.hook('prepare:types', ({ tsConfig, nodeTsConfig, sharedTsConfig }) => {
+      const paths: Record<string, string[]> = {}
 
-        for (const pkg of ['@nuxt/image', '@unlazy/nuxt']) {
-          try {
-            const pkgDir = resolvePackageDir(pkg)
-            if (!pkgDir) continue
-
-            paths[pkg] = [pkgDir]
-            paths[`${pkg}/*`] = [`${pkgDir}/*`]
-          } catch {
-            // Leave resolution to the default algorithm
+      for (const pkg of ['@nuxt/image', '@unlazy/nuxt']) {
+        try {
+          const pkgDir = resolvePackageDir(pkg)
+          if (!pkgDir) {
+            continue
           }
+
+          paths[pkg] = [pkgDir]
+          paths[`${pkg}/*`] = [`${pkgDir}/*`]
+        } catch {
+          // Leave resolution to the default algorithm
+        }
+      }
+
+      // `nodeTsConfig` covers `nuxt.config.ts`, where consumers configure
+      // `magicImage.image` and thus need `@nuxt/image`'s provider augmentations
+      for (const config of [tsConfig, nodeTsConfig, sharedTsConfig]) {
+        if (!config) {
+          continue
         }
 
-        // `nodeTsConfig` covers `nuxt.config.ts`, where consumers configure
-        // `magicImage.image` and thus need `@nuxt/image`'s provider augmentations
-        for (const config of [tsConfig, nodeTsConfig, sharedTsConfig]) {
-          if (!config) continue
-
-          config.compilerOptions ||= {}
-          config.compilerOptions.paths = {
-            ...paths,
-            ...config.compilerOptions.paths,
-          }
+        config.compilerOptions ||= {}
+        config.compilerOptions.paths = {
+          ...paths,
+          ...config.compilerOptions.paths,
         }
-      },
-    )
+      }
+    })
   },
 })
 
