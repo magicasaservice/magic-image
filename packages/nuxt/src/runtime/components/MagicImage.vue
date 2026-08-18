@@ -16,7 +16,16 @@
 import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
 import { UnLazyImage } from '#components'
 
+import type { ImageOptions } from '@nuxt/image'
 import type { MagicImageRuntimeConfig, MagicImageModifiers } from '../../module'
+
+// `@nuxt/image` types `provider` and `modifiers` from the app's generated
+// provider map, which is `never` here and too narrow in an app. Widen both back
+// for this deliberately provider-agnostic component.
+type MagicImageSizesOptions = Omit<ImageOptions, 'provider' | 'modifiers'> & {
+  provider?: string
+  modifiers?: Partial<MagicImageModifiers>
+}
 
 const options = useRuntimeConfig().public.magicImage as MagicImageRuntimeConfig
 
@@ -48,10 +57,14 @@ const {
 
 const emit = defineEmits(['loaded'])
 const { getSizes } = useImage()
+const getMagicImageSizes = getSizes as (
+  source: string,
+  options?: MagicImageSizesOptions
+) => ReturnType<typeof getSizes>
 const loaded = ref(false)
 
 const computedImageSizes = computed(() =>
-  getSizes(src, {
+  getMagicImageSizes(src, {
     sizes: sizes ?? options?.sizes,
     modifiers: modifiers,
     provider: provider,

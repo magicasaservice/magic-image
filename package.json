@@ -36,14 +36,24 @@
     "update:deps:major": "pnpm dlx taze major -r -w"
   },
   "dependencies": {
-    "@nuxt/image": "^2.0.0",
     "@nuxt/kit": "^4.4.2",
-    "@unlazy/nuxt": "^2.0.1",
     "defu": "^6.1.7",
     "ufo": "^1.6.3"
   },
+  "peerDependencies": {
+    "@nuxt/image": "^2.0.0",
+    "@unlazy/nuxt": "^2.0.1"
+  },
+  "peerDependencyMeta": {
+    "@nuxt/image": {
+      "optional": false
+    },
+    "@unlazy/nuxt": {
+      "optional": false
+    }
+  },
   "devDependencies": {
-    "@maas/config": "^1.13.0",
+    "@maas/config": "^1.15.0",
     "@release-it/bumper": "^7.0.5",
     "@turbo/gen": "^2.9.5",
     "prettier": "^3.4.2",

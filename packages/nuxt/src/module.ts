@@ -1,15 +1,4 @@
-import { defu } from 'defu'
-
-import { createRequire } from 'node:module'
-import { dirname, join } from 'node:path'
-import { existsSync, readFileSync } from 'node:fs'
-
-import {
-  defineNuxtModule,
-  addComponent,
-  createResolver,
-  installModule,
-} from '@nuxt/kit'
+import { defineNuxtModule, addComponent, createResolver } from '@nuxt/kit'
 
 import type {
   ModuleOptions as NuxtImageModuleOptions,
@@ -26,9 +15,10 @@ export interface ModuleOptions {
   unlazy: UnlazyModuleOptions
 }
 
-// Shape of the public runtime config actually written by the module
+// Shape of the public runtime config actually written by the module. `sizes` is
+// always the string form here, never the record one — see `serializeSizes`.
 export interface MagicImageRuntimeConfig extends UnlazyModuleOptions {
-  sizes: ModuleOptions['sizes']
+  sizes: string
   providers: Record<
     string,
     { name: string; provider: string; options: Record<string, unknown> }
@@ -45,6 +35,7 @@ export type MagicImageModifiers = Omit<ImageModifiers, 'fit'> & {
     | 'outside'
     | 'pad'
     | 'smartcrop'
+  rotate?: number
   // MaaS
   pixelDensity?: number
   trimImage?: boolean
@@ -79,25 +70,43 @@ export type MagicImageModifiers = Omit<ImageModifiers, 'fit'> & {
   fps?: number
 }
 
-// Resolve the root directory of a package from this module's own location.
-// `<pkg>/package.json` cannot be required directly because both dependencies
-// restrict subpaths via `exports`, so walk up from the resolved entry point.
-function resolvePackageDir(pkg: string): string | undefined {
-  const require = createRequire(import.meta.url)
-  let dir = dirname(require.resolve(pkg))
+const resolver = createResolver(import.meta.url)
 
-  while (dir !== dirname(dir)) {
-    const pkgJson = join(dir, 'package.json')
-    if (existsSync(pkgJson)) {
-      try {
-        if (JSON.parse(readFileSync(pkgJson, 'utf8')).name === pkg) {
-          return dir
-        }
-      } catch {
-        // Ignore unreadable package.json and keep walking up
-      }
-    }
-    dir = dirname(dir)
+// Nuxt derives the public runtime config types from the values written into it,
+// so `sizes` has to land in one stable shape — otherwise the generated type is
+// whatever a given app happened to configure, and the union no longer fits it.
+// `@nuxt/image` parses both forms into the same map, and stringifies every value
+// on the way out, so the string form loses nothing.
+function serializeSizes(sizes: ModuleOptions['sizes']): string {
+  if (typeof sizes === 'string') {
+    return sizes
+  }
+
+  return Object.entries(sizes)
+    .map(([screen, size]) => `${screen}:${size}`)
+    .join(' ')
+}
+
+// Build the custom provider definitions. Each provider forwards whatever the
+// app configured under `magicImage.image.<name>` to the provider runtime.
+function createProviders(image: Partial<NuxtImageModuleOptions>) {
+  const imageOptions = image as Record<string, unknown>
+
+  return {
+    maas: {
+      name: 'maas',
+      provider: resolver.resolve('./runtime/providers/maas'),
+      options: {
+        ...(imageOptions.maas as Record<string, unknown>),
+      },
+    },
+    mux: {
+      name: 'mux',
+      provider: resolver.resolve('./runtime/providers/mux'),
+      options: {
+        ...(imageOptions.mux as Record<string, unknown>),
+      },
+    },
   }
 }
 
@@ -112,86 +121,40 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
     image: {} as NuxtImageModuleOptions,
     unlazy: {} as UnlazyModuleOptions,
   },
-  async setup(options, nuxt) {
-    const resolver = createResolver(import.meta.url)
+  // Nuxt installs these for us. Their options are read from the raw config
+  // rather than the resolved ones, because dependencies are resolved before
+  // `setup` runs — the defaults for both are empty, so nothing is lost.
+  moduleDependencies: (nuxt) => {
+    const { image = {}, unlazy = {} } =
+      (nuxt.options as { magicImage?: Partial<ModuleOptions> }).magicImage ?? {}
 
+    return {
+      '@nuxt/image': {
+        // `magicImage.image` wins over a top-level `image` config, while the
+        // custom providers only fill in what the app has not defined itself
+        overrides: image as Record<string, unknown>,
+        defaults: { providers: createProviders(image) },
+      },
+      '@unlazy/nuxt': {
+        overrides: unlazy as Record<string, unknown>,
+      },
+    }
+  },
+  setup(options, nuxt) {
     addComponent({
       filePath: resolver.resolve('./runtime/components/MagicImage.vue'),
       name: 'MagicImage',
       global: true,
     })
 
-    // Define all custom providers
-    const imageOptions = options.image as Record<string, unknown>
-    const providers = {
-      maas: {
-        name: 'maas',
-        provider: resolver.resolve('./runtime/providers/maas'),
-        options: {
-          ...(imageOptions.maas as Record<string, unknown>),
-        },
-      },
-      mux: {
-        name: 'mux',
-        provider: resolver.resolve('./runtime/providers/mux'),
-        options: {
-          ...(imageOptions.mux as Record<string, unknown>),
-        },
-      },
-    }
-
-    // Prepare image module options with custom providers
-    const mergedImageOptions = defu(options.image, {
-      providers: providers,
-    })
+    const providers = createProviders(options.image)
 
     // Add module options to public runtime config
     nuxt.options.runtimeConfig.public.magicImage = {
-      sizes: options.sizes,
+      sizes: serializeSizes(options.sizes),
       providers: providers,
       ...options.unlazy, // Include unlazy options if needed client-side
     }
-
-    // Install dependencies with merged options
-    await installModule('@nuxt/image', mergedImageOptions)
-    await installModule('@unlazy/nuxt', options.unlazy)
-
-    // `@nuxt/image` and `@unlazy/nuxt` are dependencies of this module, not of
-    // the consuming app. With strict package managers (pnpm) they are therefore
-    // not resolvable from the app's `.nuxt` directory, which breaks the type
-    // augmentations both modules generate (`declare module '@nuxt/image'`).
-    // Register tsconfig `paths` so those specifiers resolve for type checking.
-    nuxt.hook('prepare:types', ({ tsConfig, nodeTsConfig, sharedTsConfig }) => {
-      const paths: Record<string, string[]> = {}
-
-      for (const pkg of ['@nuxt/image', '@unlazy/nuxt']) {
-        try {
-          const pkgDir = resolvePackageDir(pkg)
-          if (!pkgDir) {
-            continue
-          }
-
-          paths[pkg] = [pkgDir]
-          paths[`${pkg}/*`] = [`${pkgDir}/*`]
-        } catch {
-          // Leave resolution to the default algorithm
-        }
-      }
-
-      // `nodeTsConfig` covers `nuxt.config.ts`, where consumers configure
-      // `magicImage.image` and thus need `@nuxt/image`'s provider augmentations
-      for (const config of [tsConfig, nodeTsConfig, sharedTsConfig]) {
-        if (!config) {
-          continue
-        }
-
-        config.compilerOptions ||= {}
-        config.compilerOptions.paths = {
-          ...paths,
-          ...config.compilerOptions.paths,
-        }
-      }
-    })
   },
 })
 
