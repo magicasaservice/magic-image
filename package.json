@@ -46,6 +46,8 @@
     "@maas/config": "^1.13.0",
     "@release-it/bumper": "^7.0.5",
     "@turbo/gen": "^2.9.5",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "release-it": "^19.2.4",
     "turbo": "^2.9.5"
   },
