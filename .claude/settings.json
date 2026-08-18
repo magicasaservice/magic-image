@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "maas": {
+      "source": {
+        "source": "github",
+        "repo": "magicasaservice/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "engineering-standards@maas": true
+  },
+  "includeCoAuthoredBy": false
+}

@@ -3,7 +3,7 @@
 
 # Magic Image
 
-Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) and [Unlazy](https://unlazy.byjohann.dev) into a single component with automatic lazy loading, responsive srcsets, and built-in support for the MaaS and Mux image providers.
+Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) and [Unlazy](https://unlazy.byjohann.dev) into a single component. Reach for it whenever an image should carry a responsive srcset and lazy load itself without per-image wiring: content images, hero art, CMS media, Mux video thumbnails.
 
 ---
 
@@ -18,44 +18,52 @@ Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) 
 
 ## Install
 
-Install the package and its peer dependencies:
+Install the package:
 
 ```bash
-# npm
-npm install @maas/magic-image @nuxt/image @unlazy/nuxt
-
 # pnpm
-pnpm add @maas/magic-image @nuxt/image @unlazy/nuxt
+pnpm add @maas/magic-image
+
+# npm
+npm install @maas/magic-image
 
 # yarn
-yarn add @maas/magic-image @nuxt/image @unlazy/nuxt
+yarn add @maas/magic-image
+
+# bun
+bun add @maas/magic-image
 ```
 
-> **Tip:** This package ships with an `.npmrc` that sets `auto-install-peers=true`. With **pnpm**, this means `@nuxt/image` and `@unlazy/nuxt` are installed automatically alongside `@maas/magic-image` — a single `pnpm add @maas/magic-image` is enough. **npm 7+** auto-installs peer deps by default too. **Yarn** always requires manual peer dep installation as shown above.
+`@nuxt/image` and `@unlazy/nuxt` are dependencies of this module, which installs both itself. There are no peer dependencies to install.
 
 ---
 
 ## Configure
 
-Register the module in your `nuxt.config.ts`:
+Register the module in your `nuxt.config.ts`. Every option is optional:
 
 ```ts
 export default defineNuxtConfig({
   modules: ['@maas/magic-image'],
   magicImage: {
-    // Default srcset breakpoints (optional)
     sizes: '128w:128px 512w:512px 720w:720px 1024w:1024px 1440w:1440px',
-    // Passed to @nuxt/image — see https://image.nuxt.com/get-started/configuration
     image: {
       provider: 'maas',
     },
-    // Passed to @unlazy/nuxt — see https://unlazy.byjohann.dev/integrations/nuxt.html
     unlazy: {
       ssr: true,
     },
   },
 })
 ```
+
+### Options
+
+| Option   | Type                                         | Default                                                        | Description                                                              |
+| -------- | -------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `sizes`  | `string \| Record<string, string \| number>` | `'128w:128px 512w:512px 720w:720px 1024w:1024px 1440w:1440px'` | Sizes applied to every image, overridden per image by the `sizes` prop   |
+| `image`  | Nuxt Image module options                    | `{}`                                                           | Passed to [Nuxt Image](https://image.nuxt.com/get-started/configuration) |
+| `unlazy` | Unlazy module options                        | `{}`                                                           | Passed to [Unlazy](https://unlazy.byjohann.dev/integrations/nuxt.html)   |
 
 ---
 
@@ -74,23 +82,45 @@ The `<MagicImage>` component is registered globally — no import needed.
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `src` | `string` | — | Image source URL (required) |
-| `provider` | `string` | module default | Provider name (`'maas'`, `'mux'`, or any Nuxt Image provider) |
-| `modifiers` | `Partial<MagicImageModifiers>` | — | Provider-specific image transformations |
-| `sizes` | `string \| Record<string, string \| number>` | module default | Responsive size breakpoints |
-| `preset` | `string` | — | Nuxt Image preset name |
-| `densities` | `string` | — | Device density descriptors (e.g. `'1x 2x'`) |
-| `placeholderSrc` | `string` | 1×1 GIF | Placeholder shown while loading |
-| `preload` | `boolean` | `false` | Add `<link rel="preload">` to `<head>` |
-| `autoSizes` | `boolean` | `true` | Auto-compute sizes attribute |
-| `lazyload` | `boolean` | `true` | Enable lazy loading |
+| Prop             | Type                                         | Default        | Description                                                   |
+| ---------------- | -------------------------------------------- | -------------- | ------------------------------------------------------------- |
+| `src`            | `string`                                     | —              | Image source URL (required)                                   |
+| `provider`       | `string`                                     | module default | Provider name (`'maas'`, `'mux'`, or any Nuxt Image provider) |
+| `modifiers`      | `Partial<MagicImageModifiers>`               | —              | Provider-specific image transformations                       |
+| `sizes`          | `string \| Record<string, string \| number>` | module default | The width the image is displayed at, per screen               |
+| `preset`         | `string`                                     | —              | Nuxt Image preset name                                        |
+| `densities`      | `string`                                     | —              | Device density descriptors (e.g. `'1x 2x'`)                   |
+| `placeholderSrc` | `string`                                     | 1×1 GIF        | Placeholder shown while loading                               |
+| `preload`        | `boolean`                                    | `false`        | Add `<link rel="preload">` to `<head>`                        |
+| `autoSizes`      | `boolean`                                    | `true`         | Measure the element instead of using the declared `sizes`     |
+| `lazyload`       | `boolean`                                    | `true`         | Enable lazy loading                                           |
+
+### Sizes
+
+A srcset alone does not decide which candidate the browser downloads. It resolves the candidates against the image’s `sizes` attribute. Get `sizes` wrong and the browser picks a candidate that is too small, then upscales it.
+
+`autoSizes` is on by default, so the element measures itself: `sizes` is rendered as `auto` and Unlazy keeps it in line with the element’s layout width. Reach for it whenever the image’s width follows the layout.
+
+Turn `autoSizes` off to declare the width yourself. The `sizes` prop is rendered as the `sizes` attribute, one entry per screen:
+
+```vue
+<MagicImage
+  src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+  sizes="640w:100vw 1024w:50vw"
+  :auto-sizes="false"
+/>
+```
+
+The same `sizes` value also decides which srcset candidates are generated, and the module option applies to every image. So declare a per-image `sizes` prop whenever an image is displayed at a different width than the module default describes.
+
+Both paths describe the element’s **layout** width. An image painted with `object-fit: cover` covers more width than its box whenever the box is taller than the image’s own aspect ratio. Lay such an image out at the size the crop paints, or every candidate is measured against a box narrower than what ends up on screen.
+
+`sizes="auto"` is only valid on a lazy loaded image. With `lazyload` off, no `sizes` attribute is rendered and the browser assumes the image spans the full viewport width.
 
 ### Events
 
-| Event | Description |
-|-------|-------------|
+| Event    | Description                               |
+| -------- | ----------------------------------------- |
 | `loaded` | Fired when the image has finished loading |
 
 ---
@@ -117,27 +147,27 @@ Built-in provider for the [MaaS image CDN](https://img.maas.earth). Set `provide
 
 **MaaS modifiers:**
 
-| Modifier | Type | Description |
-|----------|------|-------------|
-| `width` | `number` | Output width in px |
-| `height` | `number` | Output height in px |
-| `fit` | `'cover' \| 'contain' \| 'fill' \| 'inside' \| 'outside'` | Resize fit mode |
-| `format` | `'jpg' \| 'jpeg' \| 'png' \| 'webp'` | Output format |
-| `quality` | `number` | Output quality (1–100) |
-| `pixelDensity` | `number` | Device pixel ratio (e.g. `2` for 2×) |
-| `blur` | `number` | Blur radius |
-| `sharpen` | `number` | Sharpening strength |
-| `brightness` | `number` | Brightness adjustment |
-| `contrast` | `number` | Contrast adjustment |
-| `saturation` | `number` | Saturation adjustment |
-| `hue` | `number` | Hue rotation in degrees |
-| `gamma` | `number` | Gamma correction |
-| `filter` | `'greyscale' \| 'sepia' \| 'negative' \| 'duotone'` | Color filter |
-| `rotate` | `number` | Rotation in degrees |
-| `mirror` | `boolean` | Flip horizontally |
-| `mask` | `'circle' \| 'ellipse' \| 'triangle' \| 'pentagon' \| 'hexagon' \| 'square' \| 'star' \| 'heart' \| …` | Shape mask |
-| `background` | `string` | Background color |
-| `trimImage` | `boolean` | Auto-trim whitespace |
+| Modifier       | Type                                                                                                   | Description                          |
+| -------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| `width`        | `number`                                                                                               | Output width in px                   |
+| `height`       | `number`                                                                                               | Output height in px                  |
+| `fit`          | `'cover' \| 'contain' \| 'fill' \| 'inside' \| 'outside'`                                              | Resize fit mode                      |
+| `format`       | `'jpg' \| 'jpeg' \| 'png' \| 'webp'`                                                                   | Output format                        |
+| `quality`      | `number`                                                                                               | Output quality (1–100)               |
+| `pixelDensity` | `number`                                                                                               | Device pixel ratio (e.g. `2` for 2×) |
+| `blur`         | `number`                                                                                               | Blur radius                          |
+| `sharpen`      | `number`                                                                                               | Sharpening strength                  |
+| `brightness`   | `number`                                                                                               | Brightness adjustment                |
+| `contrast`     | `number`                                                                                               | Contrast adjustment                  |
+| `saturation`   | `number`                                                                                               | Saturation adjustment                |
+| `hue`          | `number`                                                                                               | Hue rotation in degrees              |
+| `gamma`        | `number`                                                                                               | Gamma correction                     |
+| `filter`       | `'greyscale' \| 'sepia' \| 'negative' \| 'duotone'`                                                    | Color filter                         |
+| `rotate`       | `number`                                                                                               | Rotation in degrees                  |
+| `mirror`       | `boolean`                                                                                              | Flip horizontally                    |
+| `mask`         | `'circle' \| 'ellipse' \| 'triangle' \| 'pentagon' \| 'hexagon' \| 'square' \| 'star' \| 'heart' \| …` | Shape mask                           |
+| `background`   | `string`                                                                                               | Background color                     |
+| `trimImage`    | `boolean`                                                                                              | Auto-trim whitespace                 |
 
 ### Mux
 
@@ -158,18 +188,18 @@ Built-in provider for [Mux video thumbnail extraction](https://docs.mux.com/guid
 
 **Mux modifiers:**
 
-| Modifier | Type | Description |
-|----------|------|-------------|
-| `width` | `number` | Thumbnail width in px |
-| `height` | `number` | Thumbnail height in px |
-| `fit` | `'cover' \| 'contain' \| 'fill' \| 'pad' \| 'smartcrop'` | Resize fit mode |
-| `time` | `number` | Timestamp in seconds to extract thumbnail from |
-| `rotate` | `number` | Rotation in degrees |
-| `flipHorizontal` | `boolean` | Flip horizontally |
-| `flipVertical` | `boolean` | Flip vertically |
-| `start` | `number` | Clip start time |
-| `end` | `number` | Clip end time |
-| `fps` | `number` | Frames per second (for animated thumbnails) |
+| Modifier         | Type                                                     | Description                                    |
+| ---------------- | -------------------------------------------------------- | ---------------------------------------------- |
+| `width`          | `number`                                                 | Thumbnail width in px                          |
+| `height`         | `number`                                                 | Thumbnail height in px                         |
+| `fit`            | `'cover' \| 'contain' \| 'fill' \| 'pad' \| 'smartcrop'` | Resize fit mode                                |
+| `time`           | `number`                                                 | Timestamp in seconds to extract thumbnail from |
+| `rotate`         | `number`                                                 | Rotation in degrees                            |
+| `flipHorizontal` | `boolean`                                                | Flip horizontally                              |
+| `flipVertical`   | `boolean`                                                | Flip vertically                                |
+| `start`          | `number`                                                 | Clip start time                                |
+| `end`            | `number`                                                 | Clip end time                                  |
+| `fps`            | `number`                                                 | Frames per second (for animated thumbnails)    |
 
 ---
 
