@@ -28,13 +28,7 @@ export interface MagicImageRuntimeConfig extends UnlazyModuleOptions {
 // Extended modifiers covering all maas + mux provider params
 export type MagicImageModifiers = Omit<ImageModifiers, 'fit'> & {
   fit?:
-    | 'cover'
-    | 'contain'
-    | 'fill'
-    | 'inside'
-    | 'outside'
-    | 'pad'
-    | 'smartcrop'
+    'cover' | 'contain' | 'fill' | 'inside' | 'outside' | 'pad' | 'smartcrop'
   rotate?: number
   // MaaS
   pixelDensity?: number
