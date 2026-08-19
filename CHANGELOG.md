@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **BREAKING** — `@nuxt/image` and `@unlazy/nuxt` are required `peerDependencies` again, reverting the 0.2.0 move to regular `dependencies`. Their type augmentations (`declare module '@nuxt/image'`) only apply when both packages resolve from the app itself, and the tsconfig `paths` workaround shipped in 0.2.0 did not hold up. Nuxt still registers and configures both for you through `moduleDependencies` — you install them, the module wires them.
+- **BREAKING** – `@nuxt/image` and `@unlazy/nuxt` are required `peerDependencies` again, reverting the 0.2.0 move to regular `dependencies`. Their type augmentations (`declare module '@nuxt/image'`) only apply when both packages resolve from the app itself, and the tsconfig `paths` workaround shipped in 0.2.0 did not hold up. Nuxt still registers and configures both for you through `moduleDependencies` – you install them, the module wires them.
 - `runtimeConfig.public.magicImage.sizes` is always a string, even when `magicImage.sizes` is configured as a record. Nuxt derives the runtime config type from the value written into it, so the record form produced a different type per app.
 
 ### Fixed
@@ -30,7 +30,7 @@ Install both packages in your app:
 pnpm add @nuxt/image@^2.0.0 @unlazy/nuxt@^2.0.1
 ```
 
-If you removed them when upgrading to 0.2.0, add them back — that migration note no longer applies. Leave them out of `modules` in your `nuxt.config.ts`: the module registers both, and configuring them through `magicImage.image` and `magicImage.unlazy` keeps working.
+If you removed them when upgrading to 0.2.0, add them back – that migration note no longer applies. Leave them out of `modules` in your `nuxt.config.ts`: the module registers both, and configuring them through `magicImage.image` and `magicImage.unlazy` keeps working.
 
 ## [0.2.0] - 2026-08-17
 
@@ -53,7 +53,7 @@ If you added `@nuxt/image` / `@unlazy/nuxt` to your own `package.json` (or a `pu
 
 ### Changed
 
-- **BREAKING** — Require `@unlazy/nuxt` `^2.0.1` (was `^1.1.0`). Unlazy v2 renamed the `UnLazyImage` component events from `loaded`/`error` to `image-load`/`image-error`, so v1 is no longer compatible.
+- **BREAKING** – Require `@unlazy/nuxt` `^2.0.1` (was `^1.1.0`). Unlazy v2 renamed the `UnLazyImage` component events from `loaded`/`error` to `image-load`/`image-error`, so v1 is no longer compatible.
 - `MagicImage` now listens for Unlazy's `@image-load` event instead of `@loaded`.
 - Bump the Volta Node pin to `24.18.0`, satisfying the `engines.node` requirement (`^20.19.0 || >=22.3.0`) introduced by `@nuxt/image` `2.1.0`.
 
@@ -63,7 +63,7 @@ If you added `@nuxt/image` / `@unlazy/nuxt` to your own `package.json` (or a `pu
 
 ### Migration
 
-Consumers of `<MagicImage>` need **no code changes** — the component's own `loaded` emit and `data-loaded` attribute are unchanged. Only the peer dependency has to be updated:
+Consumers of `<MagicImage>` need **no code changes** – the component's own `loaded` emit and `data-loaded` attribute are unchanged. Only the peer dependency has to be updated:
 
 ```sh
 pnpm add @unlazy/nuxt@^2.0.1
@@ -71,13 +71,13 @@ pnpm add @unlazy/nuxt@^2.0.1
 
 Staying on `@unlazy/nuxt` v1 with this release will make `<MagicImage>` silently never fire `loaded` and never set `data-loaded="true"`, since the underlying event no longer exists under that name.
 
-`@nuxt/image` is unaffected — the existing `^2.0.0` range already covers the current `2.1.0`.
+`@nuxt/image` is unaffected – the existing `^2.0.0` range already covers the current `2.1.0`.
 
 ## [0.0.14] - 2026-08-06
 
 ### Changed
 
-- **BREAKING** — Upgrade to `@nuxt/image` v2 and rename the published package to `@maas/magic-image`.
+- **BREAKING** – Upgrade to `@nuxt/image` v2 and rename the published package to `@maas/magic-image`.
 
 ### Fixed
 

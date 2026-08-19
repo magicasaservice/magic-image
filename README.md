@@ -9,10 +9,10 @@ Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) 
 
 ## Key Benefits
 
-- **Auto lazy loading** — Native lazy loading via Unlazy with SSR placeholder support
-- **Responsive srcsets** — Automatic multi-size srcset generation via Nuxt Image
-- **Built-in providers** — MaaS image CDN and Mux video thumbnail extraction out of the box
-- **Typed modifiers** — Full TypeScript types for all provider-specific modifier options
+- **Auto lazy loading** – Native lazy loading via Unlazy with SSR placeholder support
+- **Responsive srcsets** – Automatic multi-size srcset generation via Nuxt Image
+- **Built-in providers** – MaaS image CDN and Mux video thumbnail extraction out of the box
+- **Typed modifiers** – Full TypeScript types for all provider-specific modifier options
 
 ---
 
@@ -74,7 +74,7 @@ Leave `@nuxt/image` and `@unlazy/nuxt` out of `modules`. Magic Image registers b
 
 ## Peer Dependencies
 
-Both peer dependencies have to be installed manually. Each one augments your app’s types — `declare module '@nuxt/image'` and its Unlazy equivalent — and a type augmentation only applies where the package resolves from your app. Package managers that auto-install peers into their own store, pnpm among them, do not put them there.
+Both peer dependencies have to be installed manually. Each one augments your app’s types – `declare module '@nuxt/image'` and its Unlazy equivalent – and a type augmentation only applies where the package resolves from your app. Package managers that auto-install peers into their own store, pnpm among them, do not put them there.
 
 | Package                                                    | Version  |
 | ---------------------------------------------------------- | -------- |
@@ -105,12 +105,12 @@ bun add @nuxt/image @unlazy/nuxt
 
 | Prop             | Type                                         | Default        | Description                                                   |
 | ---------------- | -------------------------------------------- | -------------- | ------------------------------------------------------------- |
-| `src`            | `string`                                     | —              | Image source URL (required)                                   |
+| `src`            | `string`                                     | –              | Image source URL (required)                                   |
 | `provider`       | `string`                                     | module default | Provider name (`'maas'`, `'mux'`, or any Nuxt Image provider) |
-| `modifiers`      | `Partial<MagicImageModifiers>`               | —              | Provider-specific image transformations                       |
+| `modifiers`      | `Partial<MagicImageModifiers>`               | –              | Provider-specific image transformations                       |
 | `sizes`          | `string \| Record<string, string \| number>` | module default | The width the image is displayed at, per screen               |
-| `preset`         | `string`                                     | —              | Nuxt Image preset name                                        |
-| `densities`      | `string`                                     | —              | Device density descriptors (e.g. `'1x 2x'`)                   |
+| `preset`         | `string`                                     | –              | Nuxt Image preset name                                        |
+| `densities`      | `string`                                     | –              | Device density descriptors (e.g. `'1x 2x'`)                   |
 | `placeholderSrc` | `string`                                     | 1×1 GIF        | Placeholder shown while loading                               |
 | `preload`        | `boolean`                                    | `false`        | Add `<link rel="preload">` to `<head>`                        |
 | `autoSizes`      | `boolean`                                    | `true`         | Measure the element instead of using the declared `sizes`     |
