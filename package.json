@@ -44,7 +44,7 @@
     "@nuxt/image": "^2.0.0",
     "@unlazy/nuxt": "^2.0.1"
   },
-  "peerDependencyMeta": {
+  "peerDependenciesMeta": {
     "@nuxt/image": {
       "optional": false
     },
