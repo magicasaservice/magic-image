@@ -33,21 +33,24 @@ The component is registered globally. No import needed.
 
 ## Installation
 
-Add `@maas/magic-image` to your dependencies.
+Add `@maas/magic-image` and its two peer dependencies to your dependencies.
 
 ```sh
 # pnpm
-pnpm add @maas/magic-image
+pnpm add @maas/magic-image @nuxt/image @unlazy/nuxt
 
 # npm
-npm install @maas/magic-image
+npm install @maas/magic-image @nuxt/image @unlazy/nuxt
 
 # yarn
-yarn add @maas/magic-image
+yarn add @maas/magic-image @nuxt/image @unlazy/nuxt
 
 # bun
-bun add @maas/magic-image
+bun add @maas/magic-image @nuxt/image @unlazy/nuxt
 ```
+
+> [!NOTE]
+> `@nuxt/image` and `@unlazy/nuxt` need to be installed manually. See [Peer Dependencies](#peer-dependencies) for why.
 
 ### Nuxt
 
@@ -74,28 +77,12 @@ Leave `@nuxt/image` and `@unlazy/nuxt` out of `modules`. Magic Image registers b
 
 ## Peer Dependencies
 
-Both peer dependencies have to be installed manually. Each one augments your app’s types – `declare module '@nuxt/image'` and its Unlazy equivalent – and a type augmentation only applies where the package resolves from your app. Package managers that auto-install peers into their own store, pnpm among them, do not put them there.
+Both peer dependencies have to be installed manually. Each one augments your app’s types, and that augmentation only applies where the package resolves from your app itself. Package managers that auto-install peers into their own store, pnpm among them, resolve them somewhere else, and your app stops type checking against their options.
 
 | Package                                                    | Version  |
 | ---------------------------------------------------------- | -------- |
 | [@nuxt/image](https://www.npmjs.com/package/@nuxt/image)   | `^2.0.0` |
 | [@unlazy/nuxt](https://www.npmjs.com/package/@unlazy/nuxt) | `^2.0.1` |
-
-### Installation
-
-```sh
-# pnpm
-pnpm add @nuxt/image @unlazy/nuxt
-
-# npm
-npm install @nuxt/image @unlazy/nuxt
-
-# yarn
-yarn add @nuxt/image @unlazy/nuxt
-
-# bun
-bun add @nuxt/image @unlazy/nuxt
-```
 
 ---
 
