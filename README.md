@@ -16,11 +16,26 @@ Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) 
 
 ---
 
-## Install
+## Anatomy
 
-Install the package:
+```vue
+<template>
+  <magic-image
+    src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+    :modifiers="{ width: 800, height: 600, fit: 'cover' }"
+  />
+</template>
+```
 
-```bash
+The component is registered globally. No import needed.
+
+---
+
+## Installation
+
+Add `@maas/magic-image` to your dependencies.
+
+```sh
 # pnpm
 pnpm add @maas/magic-image
 
@@ -34,13 +49,9 @@ yarn add @maas/magic-image
 bun add @maas/magic-image
 ```
 
-`@nuxt/image` and `@unlazy/nuxt` are dependencies of this module, which installs both itself. There are no peer dependencies to install.
+### Nuxt
 
----
-
-## Configure
-
-Register the module in your `nuxt.config.ts`. Every option is optional:
+Register the module in your `nuxt.config.ts`. Every option is optional.
 
 ```ts
 export default defineNuxtConfig({
@@ -57,28 +68,38 @@ export default defineNuxtConfig({
 })
 ```
 
-### Options
-
-| Option   | Type                                         | Default                                                        | Description                                                              |
-| -------- | -------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `sizes`  | `string \| Record<string, string \| number>` | `'128w:128px 512w:512px 720w:720px 1024w:1024px 1440w:1440px'` | Sizes applied to every image, overridden per image by the `sizes` prop   |
-| `image`  | Nuxt Image module options                    | `{}`                                                           | Passed to [Nuxt Image](https://image.nuxt.com/get-started/configuration) |
-| `unlazy` | Unlazy module options                        | `{}`                                                           | Passed to [Unlazy](https://unlazy.byjohann.dev/integrations/nuxt.html)   |
+Leave `@nuxt/image` and `@unlazy/nuxt` out of `modules`. Magic Image registers both itself and forwards `magicImage.image` and `magicImage.unlazy` to them, so configure them there rather than through their own top-level keys.
 
 ---
 
-## Usage
+## Peer Dependencies
 
-The `<MagicImage>` component is registered globally — no import needed.
+Both peer dependencies have to be installed manually. Each one augments your app’s types — `declare module '@nuxt/image'` and its Unlazy equivalent — and a type augmentation only applies where the package resolves from your app. Package managers that auto-install peers into their own store, pnpm among them, do not put them there.
 
-```vue
-<template>
-  <MagicImage
-    src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
-    :modifiers="{ width: 800, height: 600, fit: 'cover' }"
-  />
-</template>
+| Package                                                    | Version  |
+| ---------------------------------------------------------- | -------- |
+| [@nuxt/image](https://www.npmjs.com/package/@nuxt/image)   | `^2.0.0` |
+| [@unlazy/nuxt](https://www.npmjs.com/package/@unlazy/nuxt) | `^2.0.1` |
+
+### Installation
+
+```sh
+# pnpm
+pnpm add @nuxt/image @unlazy/nuxt
+
+# npm
+npm install @nuxt/image @unlazy/nuxt
+
+# yarn
+yarn add @nuxt/image @unlazy/nuxt
+
+# bun
+bun add @nuxt/image @unlazy/nuxt
 ```
+
+---
+
+## API Reference
 
 ### Props
 
@@ -95,27 +116,15 @@ The `<MagicImage>` component is registered globally — no import needed.
 | `autoSizes`      | `boolean`                                    | `true`         | Measure the element instead of using the declared `sizes`     |
 | `lazyload`       | `boolean`                                    | `true`         | Enable lazy loading                                           |
 
-### Sizes
+### Options
 
-A srcset alone does not decide which candidate the browser downloads. It resolves the candidates against the image’s `sizes` attribute. Get `sizes` wrong and the browser picks a candidate that is too small, then upscales it.
+To customize the module, override the necessary options in your `nuxt.config.ts`. Any custom options are merged with the defaults.
 
-`autoSizes` is on by default, so the element measures itself: `sizes` is rendered as `auto` and Unlazy keeps it in line with the element’s layout width. Reach for it whenever the image’s width follows the layout.
-
-Turn `autoSizes` off to declare the width yourself. The `sizes` prop is rendered as the `sizes` attribute, one entry per screen:
-
-```vue
-<MagicImage
-  src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
-  sizes="640w:100vw 1024w:50vw"
-  :auto-sizes="false"
-/>
-```
-
-The same `sizes` value also decides which srcset candidates are generated, and the module option applies to every image. So declare a per-image `sizes` prop whenever an image is displayed at a different width than the module default describes.
-
-Both paths describe the element’s **layout** width. An image painted with `object-fit: cover` covers more width than its box whenever the box is taller than the image’s own aspect ratio. Lay such an image out at the size the crop paints, or every candidate is measured against a box narrower than what ends up on screen.
-
-`sizes="auto"` is only valid on a lazy loaded image. With `lazyload` off, no `sizes` attribute is rendered and the browser assumes the image spans the full viewport width.
+| Option   | Type                                         | Default                                                        | Description                                                              |
+| -------- | -------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `sizes`  | `string \| Record<string, string \| number>` | `'128w:128px 512w:512px 720w:720px 1024w:1024px 1440w:1440px'` | Sizes applied to every image, overridden per image by the `sizes` prop   |
+| `image`  | Nuxt Image module options                    | `{}`                                                           | Passed to [Nuxt Image](https://image.nuxt.com/get-started/configuration) |
+| `unlazy` | Unlazy module options                        | `{}`                                                           | Passed to [Unlazy](https://unlazy.byjohann.dev/integrations/nuxt.html)   |
 
 ### Events
 
@@ -125,14 +134,42 @@ Both paths describe the element’s **layout** width. An image painted with `obj
 
 ---
 
+## Sizes
+
+A srcset alone does not decide which candidate the browser downloads. It resolves the candidates against the image’s `sizes` attribute. Get `sizes` wrong and the browser picks a candidate that is too small, then upscales it.
+
+`autoSizes` is on by default, so the element measures itself: `sizes` is rendered as `auto` and Unlazy keeps it in line with the element’s layout width. Reach for it whenever the image’s width follows the layout.
+
+Turn `autoSizes` off to declare the width yourself. The `sizes` prop is rendered as the `sizes` attribute, one entry per screen.
+
+```vue
+<magic-image
+  src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+  sizes="640w:100vw 1024w:50vw"
+  :auto-sizes="false"
+/>
+```
+
+The same `sizes` value also decides which srcset candidates are generated, and the module option applies to every image. So declare a per-image `sizes` prop whenever an image is displayed at a different width than the module default describes.
+
+---
+
+## Caveats
+
+Both paths describe the element’s **layout** width. An image painted with `object-fit: cover` covers more width than its box whenever the box is taller than the image’s own aspect ratio. Lay such an image out at the size the crop paints, or every candidate is measured against a box narrower than what ends up on screen.
+
+`sizes="auto"` is only valid on a lazy loaded image. With `lazyload` off, no `sizes` attribute is rendered and the browser assumes the image spans the full viewport width.
+
+---
+
 ## Providers
 
 ### MaaS
 
-Built-in provider for the [MaaS image CDN](https://img.maas.earth). Set `provider: 'maas'` (or use it as the default provider) and pass any of the supported modifiers:
+Built-in provider for the [MaaS image CDN](https://img.maas.earth). Set `provider: 'maas'`, or use it as the default provider, and pass any of the supported modifiers.
 
 ```vue
-<MagicImage
+<magic-image
   src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
   provider="maas"
   :modifiers="{
@@ -145,7 +182,7 @@ Built-in provider for the [MaaS image CDN](https://img.maas.earth). Set `provide
 />
 ```
 
-**MaaS modifiers:**
+#### Modifiers
 
 | Modifier       | Type                                                                                                   | Description                          |
 | -------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------ |
@@ -171,10 +208,10 @@ Built-in provider for the [MaaS image CDN](https://img.maas.earth). Set `provide
 
 ### Mux
 
-Built-in provider for [Mux video thumbnail extraction](https://docs.mux.com/guides/get-images-from-a-video). Pass the full Mux thumbnail URL as `src` and set `provider="mux"`:
+Built-in provider for [Mux video thumbnail extraction](https://docs.mux.com/guides/get-images-from-a-video). Pass the full Mux thumbnail URL as `src` and set `provider="mux"`.
 
 ```vue
-<MagicImage
+<magic-image
   src="https://image.mux.com/YOUR_PLAYBACK_ID/thumbnail.jpg"
   provider="mux"
   :modifiers="{
@@ -186,7 +223,7 @@ Built-in provider for [Mux video thumbnail extraction](https://docs.mux.com/guid
 />
 ```
 
-**Mux modifiers:**
+#### Modifiers
 
 | Modifier         | Type                                                     | Description                                    |
 | ---------------- | -------------------------------------------------------- | ---------------------------------------------- |
@@ -205,7 +242,7 @@ Built-in provider for [Mux video thumbnail extraction](https://docs.mux.com/guid
 
 ## TypeScript
 
-Import `MagicImageModifiers` for typed modifier objects:
+Import `MagicImageModifiers` for typed modifier objects.
 
 ```ts
 import type { MagicImageModifiers } from '@maas/magic-image'
