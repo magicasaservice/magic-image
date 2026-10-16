@@ -5,10 +5,11 @@
   "tasks": {
     "//#t:release": {
       "cache": false,
-      "dependsOn": ["nuxt#test", "nuxt#build"]
+      "dependsOn": ["nuxt#typecheck", "nuxt#test", "nuxt#build"]
     },
     "test": {},
     "lint": {},
+    "typecheck": {},
     "dev": {
       "cache": false,
       "persistent": true

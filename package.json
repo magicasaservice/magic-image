@@ -28,6 +28,7 @@
     "dev:nuxt": "turbo run dev --filter=nuxt",
     "test": "turbo run test",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build": "turbo run build",
     "uninstall": "pnpm dlx rimraf --glob ./**/node_modules --glob ./**/pnpm-lock.yaml",
@@ -36,9 +37,9 @@
     "update:deps:major": "pnpm dlx taze major -r -w"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.4.2",
+    "@nuxt/kit": "^4.6.1",
     "defu": "^6.1.7",
-    "ufo": "^1.6.3"
+    "ufo": "^1.6.4"
   },
   "peerDependencies": {
     "@nuxt/image": "^2.0.0",
@@ -53,16 +54,16 @@
     }
   },
   "devDependencies": {
-    "@maas/config": "^1.15.0",
-    "@release-it/bumper": "^7.0.5",
-    "@turbo/gen": "^2.9.5",
-    "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "release-it": "^19.2.4",
-    "turbo": "^2.9.5"
+    "@maas/config": "^1.16.1",
+    "@release-it/bumper": "^8.0.1",
+    "@turbo/gen": "^2.11.8",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "release-it": "^21.1.1",
+    "turbo": "^2.11.8"
   },
   "volta": {
     "node": "24.18.0"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.34.7"
 }

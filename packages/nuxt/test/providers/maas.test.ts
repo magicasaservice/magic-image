@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
+import providerFactory from '../../src/runtime/providers/maas'
 import type { ImageCTX } from '@nuxt/image'
 import type { MagicImageModifiers } from '../../src/module'
-import providerFactory from '../../src/runtime/providers/maas'
 
 const { getImage } = providerFactory({})
 const _ctx = { options: {} } as ImageCTX

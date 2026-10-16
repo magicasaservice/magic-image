@@ -4,7 +4,6 @@ import type {
   ModuleOptions as NuxtImageModuleOptions,
   ImageModifiers,
 } from '@nuxt/image'
-
 import type { ModuleOptions as UnlazyModuleOptions } from '@unlazy/nuxt'
 import type { NuxtModule } from '@nuxt/schema'
 
