@@ -29,6 +29,20 @@ Magic Image is a Nuxt module that combines [Nuxt Image](https://image.nuxt.com) 
 
 The component is registered globally. No import needed.
 
+### Above-the-fold images
+
+Unlazy applies the `srcset` with JavaScript, so a lazy image only paints after hydration. For the image that decides your Largest Contentful Paint, set `priority`: the component then renders a plain `<img>` with `src`, `srcset` and `sizes` in the server HTML, `loading="eager"`, `fetchpriority="high"` and a matching `<link rel="preload">`. There is no placeholder in this mode, and `autoSizes` does not apply, so give the image a `sizes` prop that describes its layout.
+
+```vue
+<template>
+  <magic-image
+    src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+    sizes="sm:100vw md:100vw lg:100vw xl:100vw 2xl:100vw"
+    priority
+  />
+</template>
+```
+
 ---
 
 ## Installation
@@ -100,6 +114,7 @@ Both peer dependencies have to be installed manually. Each one augments your app
 | `densities`      | `string`                                     | –              | Device density descriptors (e.g. `'1x 2x'`)                   |
 | `placeholderSrc` | `string`                                     | 1×1 GIF        | Placeholder shown while loading                               |
 | `preload`        | `boolean`                                    | `false`        | Add `<link rel="preload">` to `<head>`                        |
+| `priority`       | `boolean`                                    | `false`        | Render for LCP: `srcset` in the server HTML, eager, preloaded |
 | `autoSizes`      | `boolean`                                    | `true`         | Measure the element instead of using the declared `sizes`     |
 | `lazyload`       | `boolean`                                    | `true`         | Enable lazy loading                                           |
 

@@ -1,9 +1,22 @@
 <template>
+  <img
+    v-if="priority"
+    ref="image"
+    class="magic-image"
+    :data-loaded="loaded"
+    :src="sources?.src"
+    :srcset="sources?.srcset"
+    :sizes="sources?.sizes"
+    loading="eager"
+    fetchpriority="high"
+    @load="onLoaded"
+  />
   <un-lazy-image
+    v-else
     class="magic-image"
     :data-loaded="loaded"
     :placeholder-src="placeholderSrc"
-    :src-set="computedImageSizes?.srcset"
+    :src-set="sources?.srcset"
     :sizes="sizesAttribute"
     :auto-sizes="autoSizes"
     :preload="preload"
@@ -13,21 +26,18 @@
 </template>
 
 <script lang="ts" setup>
-import { useImage, useHead, computed, ref, useRuntimeConfig } from '#imports'
+import {
+  computed,
+  onMounted,
+  ref,
+  useHead,
+  useImage,
+  useRuntimeConfig,
+  useTemplateRef,
+} from '#imports'
 import { UnLazyImage } from '#components'
-
 import type { ImageOptions } from '@nuxt/image'
-import type { MagicImageRuntimeConfig, MagicImageModifiers } from '../../module'
-
-// `@nuxt/image` types `provider` and `modifiers` from the app's generated
-// provider map, which is `never` here and too narrow in an app. Widen both back
-// for this deliberately provider-agnostic component.
-type MagicImageSizesOptions = Omit<ImageOptions, 'provider' | 'modifiers'> & {
-  provider?: string
-  modifiers?: Partial<MagicImageModifiers>
-}
-
-const options = useRuntimeConfig().public.magicImage as MagicImageRuntimeConfig
+import type { MagicImageModifiers, MagicImageRuntimeConfig } from '../../module'
 
 interface MagicImageProps {
   src: string
@@ -37,65 +47,88 @@ interface MagicImageProps {
   modifiers?: Partial<MagicImageModifiers>
   placeholderSrc?: string
   preload?: boolean
+  priority?: boolean
   sizes?: Record<string, string | number> | string
   autoSizes?: boolean
   lazyload?: boolean
 }
 
+// `@nuxt/image` narrows `provider` and `modifiers` to the app's provider map.
+type GetSizes = (
+  source: string,
+  options?: Omit<ImageOptions, 'provider' | 'modifiers'> & {
+    provider?: string
+    modifiers?: Partial<MagicImageModifiers>
+  }
+) => ReturnType<ReturnType<typeof useImage>['getSizes']>
+
 const {
   src,
-  placeholderSrc = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
-  preload = false,
-  autoSizes = true,
-  lazyload = true,
-  sizes,
   provider,
   preset,
-  modifiers,
   densities,
+  modifiers,
+  placeholderSrc = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+  preload = false,
+  priority = false,
+  sizes,
+  autoSizes = true,
+  lazyload = true,
 } = defineProps<MagicImageProps>()
 
-const emit = defineEmits(['loaded'])
-const { getSizes } = useImage()
-const getMagicImageSizes = getSizes as (
-  source: string,
-  options?: MagicImageSizesOptions
-) => ReturnType<typeof getSizes>
-const loaded = ref(false)
+const emit = defineEmits<{ loaded: [] }>()
 
-const computedImageSizes = computed(() =>
-  getMagicImageSizes(src, {
-    sizes: sizes ?? options?.sizes,
-    modifiers: modifiers,
-    provider: provider,
-    preset: preset,
-    densities: densities,
+const config = useRuntimeConfig().public.magicImage as MagicImageRuntimeConfig
+const getSizes = useImage().getSizes as GetSizes
+
+const sources = computed(() =>
+  getSizes(src, {
+    sizes: sizes ?? config.sizes,
+    modifiers,
+    provider,
+    preset,
+    densities,
   })
 )
 
 const sizesAttribute = computed(() => {
   if (!autoSizes) {
-    return computedImageSizes.value?.sizes
+    return sources.value?.sizes
   }
   return lazyload ? 'auto' : undefined
 })
 
-if (preload) {
+if (preload || priority) {
   useHead({
     link: [
       {
         rel: 'preload',
         as: 'image',
-        href: computedImageSizes?.value?.src,
-        imagesrcset: computedImageSizes?.value?.srcset,
-        imagesizes: computedImageSizes?.value?.sizes,
+        href: () => sources.value?.src,
+        imagesrcset: () => sources.value?.srcset,
+        imagesizes: () => sources.value?.sizes,
+        fetchpriority: priority ? 'high' : undefined,
       },
     ],
   })
 }
 
+const loaded = ref(false)
+const image = useTemplateRef<HTMLImageElement>('image')
+
 function onLoaded() {
-  emit('loaded')
+  if (loaded.value) {
+    return
+  }
   loaded.value = true
+  emit('loaded')
 }
+
+// A priority image can finish before hydration, so `load` never fires for the
+// listener. `complete` is also true for a broken image, hence the size check.
+onMounted(() => {
+  if (priority && image.value?.complete && image.value.naturalWidth > 0) {
+    onLoaded()
+  }
+})
 </script>

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `priority` prop for the LCP image. It renders a plain `<img>` with `src`, `srcset` and `sizes` in the server HTML, `loading="eager"`, `fetchpriority="high"` and a `<link rel="preload">` with high fetch priority, so the image paints before hydration instead of waiting for Unlazy to apply the `srcset`. No placeholder and no `autoSizes` in this mode; pass `sizes` for the layout. `loaded` still fires, also when the image finished before hydration.
+
 ## [1.0.0] - 2026-08-19
 
 ### Changed

@@ -8,6 +8,10 @@ function imgByTestId(html: string, testId: TestId) {
   return html.match(image)?.[0] ?? ''
 }
 
+function imagePreloads(html: string) {
+  return html.match(/<link[^>]*rel="preload"[^>]*as="image"[^>]*>/g) ?? []
+}
+
 describe('magic-image module', async () => {
   await setup({
     rootDir: fileURLToPath(new URL('./fixtures/basic', import.meta.url)),
@@ -44,6 +48,47 @@ describe('magic-image module', async () => {
     it('omits sizes when eager, since auto needs lazy loading', async () => {
       const html = await $fetch('/')
       expect(imgByTestId(html, TestId.EagerImage)).not.toMatch(/\ssizes=/)
+    })
+  })
+
+  describe('priority image', () => {
+    it('renders the srcset in the server HTML instead of data-srcset', async () => {
+      const html = await $fetch('/')
+      const img = imgByTestId(html, TestId.PriorityImage)
+      expect(img).toMatch(/\ssrcset="[^"]*img\.maas\.earth[^"]*"/)
+      expect(img).not.toContain('data-srcset=')
+      expect(img).toContain('sizes="400px"')
+    })
+
+    it('loads eagerly with high fetch priority', async () => {
+      const html = await $fetch('/')
+      const img = imgByTestId(html, TestId.PriorityImage)
+      expect(img).toContain('loading="eager"')
+      expect(img).toContain('fetchpriority="high"')
+    })
+
+    it('leaves decoding to the browser', async () => {
+      const html = await $fetch('/')
+      expect(imgByTestId(html, TestId.PriorityImage)).not.toContain('decoding=')
+    })
+
+    it('adds one preload link for the priority image with high fetch priority', async () => {
+      const html = await $fetch('/')
+      const links = imagePreloads(html).filter((link) =>
+        link.includes('imagesizes="400px"')
+      )
+      expect(links).toHaveLength(1)
+      expect(links[0]).toMatch(/imagesrcset="[^"]*img\.maas\.earth[^"]*"/)
+      expect(links[0]).toContain('fetchpriority="high"')
+    })
+
+    it('keeps a plain preload at default fetch priority', async () => {
+      const html = await $fetch('/')
+      const plain = imagePreloads(html).find((link) =>
+        link.includes('imagesizes="200px"')
+      )
+      expect(plain).toBeDefined()
+      expect(plain).not.toContain('fetchpriority')
     })
   })
 
