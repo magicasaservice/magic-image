@@ -53,6 +53,11 @@ describe('magic-image module', async () => {
       const html = await $fetch('/')
       expect(imgByTestId(html, TestId.EagerImage)).not.toMatch(/\ssizes=/)
     })
+
+    it('omits sizes on a held image', async () => {
+      const html = await $fetch('/')
+      expect(imgByTestId(html, TestId.HeldImage)).not.toMatch(/\ssizes=/)
+    })
   })
 
   describe('placeholder', () => {
@@ -70,6 +75,44 @@ describe('magic-image module', async () => {
       expect(placeholderOf(html, TestId.FragmentPlaceholderImage)).toMatch(
         /^data:image\/gif;base64,[^#]+#own$/
       )
+    })
+  })
+
+  describe('deprecated lazyload prop', () => {
+    it('holds the image like lazyLoad does', async () => {
+      const html = await $fetch('/')
+      const img = imgByTestId(html, TestId.DeprecatedHeldImage)
+      expect(img).toContain('loading="eager"')
+      expect(img).not.toMatch(/\ssizes=/)
+    })
+
+    it('is not rendered as an attribute', async () => {
+      const html = await $fetch('/')
+      expect(imgByTestId(html, TestId.DeprecatedHeldImage)).not.toContain(
+        'lazyload='
+      )
+    })
+  })
+
+  describe('eager loading', () => {
+    it('renders loading="eager"', async () => {
+      const html = await $fetch('/')
+      expect(imgByTestId(html, TestId.EagerImage)).toContain('loading="eager"')
+    })
+
+    it('keeps the placeholder while autoSizes measures the element', async () => {
+      const html = await $fetch('/')
+      const img = imgByTestId(html, TestId.EagerImage)
+      expect(img).toMatch(/\sdata-srcset="[^"]*img\.maas\.earth[^"]*"/)
+      expect(img).not.toMatch(/\ssrcset=/)
+    })
+
+    it('renders the srcset in the server HTML when autoSizes is off too', async () => {
+      const html = await $fetch('/')
+      const img = imgByTestId(html, TestId.EagerDeclaredSizesImage)
+      expect(img).toMatch(/\ssrcset="[^"]*img\.maas\.earth[^"]*"/)
+      expect(img).not.toContain('data-srcset=')
+      expect(img).toContain('sizes="400px"')
     })
   })
 

@@ -7,7 +7,11 @@ export enum TestId {
   PreloadImage = 'preload-image',
   LoadedPriorityImage = 'loaded-priority-image',
   BrokenPriorityImage = 'broken-priority-image',
+  EagerDeclaredSizesImage = 'eager-declared-sizes-image',
   FragmentPlaceholderImage = 'fragment-placeholder-image',
   VisibleLazyImage = 'visible-lazy-image',
+  HeldImage = 'held-image',
+  DeprecatedHeldImage = 'deprecated-held-image',
   OffscreenLazyImage = 'offscreen-lazy-image',
+  OffscreenEagerImage = 'offscreen-eager-image',
 }

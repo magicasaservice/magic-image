@@ -29,7 +29,7 @@
       :data-test-id="TestId.EagerImage"
       src="/test/photo.jpg"
       provider="maas"
-      :lazyload="false"
+      loading="eager"
     />
     <MagicImage
       :data-test-id="TestId.PriorityImage"
@@ -65,26 +65,53 @@
       @loaded="brokenLoads++"
     />
     <MagicImage
+      :data-test-id="TestId.EagerDeclaredSizesImage"
+      src="/test/photo.jpg"
+      provider="maas"
+      sizes="800w:400px"
+      :auto-sizes="false"
+      loading="eager"
+    />
+    <MagicImage
       :data-test-id="TestId.FragmentPlaceholderImage"
       src="/test/photo.jpg"
       provider="maas"
       placeholder-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==#own"
     />
+    <MagicImage
+      :data-test-id="TestId.DeprecatedHeldImage"
+      src="/test/photo.jpg"
+      provider="maas"
+      :lazyload="false"
+    />
     <span id="hydrated" :data-hydrated="hydrated" />
     <span id="priority-loads">{{ priorityLoads }}</span>
     <span id="broken-loads">{{ brokenLoads }}</span>
-    <!-- Loading in the browser: a local image in view and one far below the
-         fold. -->
+    <!-- Loading in the browser: two local images in view, one of them held,
+         and two more far below the fold. -->
     <MagicImage
       :data-test-id="TestId.VisibleLazyImage"
       src="/pixel.png"
       provider="mux"
     />
+    <MagicImage
+      :data-test-id="TestId.HeldImage"
+      src="/pixel.png"
+      provider="mux"
+      :lazy-load="released"
+    />
+    <button id="release" @click="released = true">Release</button>
     <div style="height: 10000px" />
     <MagicImage
       :data-test-id="TestId.OffscreenLazyImage"
       src="/pixel.png"
       provider="mux"
+    />
+    <MagicImage
+      :data-test-id="TestId.OffscreenEagerImage"
+      src="/pixel.png"
+      provider="mux"
+      loading="eager"
     />
   </div>
 </template>
@@ -105,6 +132,7 @@ const getProviderSizes = getSizes as (
 const hydrated = ref(false)
 const priorityLoads = ref(0)
 const brokenLoads = ref(0)
+const released = ref(false)
 onMounted(() => {
   hydrated.value = true
 })

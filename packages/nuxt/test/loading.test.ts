@@ -58,4 +58,28 @@ describe('image loading in the browser', async () => {
     },
     TIMEOUT
   )
+
+  it(
+    'loads an eager image without scrolling to it',
+    async () => {
+      const page = await openPage()
+      await waitForLoaded(page, TestId.OffscreenEagerImage)
+      await page.close()
+    },
+    TIMEOUT
+  )
+
+  it(
+    'holds an image on its placeholder until lazyLoad turns true',
+    async () => {
+      const page = await openPage()
+      await waitForStragglers(page)
+      expect(await isLoaded(page, TestId.HeldImage)).toBe('false')
+
+      await page.click('#release')
+      await waitForLoaded(page, TestId.HeldImage)
+      await page.close()
+    },
+    TIMEOUT
+  )
 })

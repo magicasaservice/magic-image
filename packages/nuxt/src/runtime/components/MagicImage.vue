@@ -20,7 +20,8 @@
     :sizes="sizesAttribute"
     :auto-sizes="autoSizes"
     :preload="preload"
-    :lazy-load="lazyload"
+    :loading="loading"
+    :lazy-load="mayLoad"
     @image-load="onLoaded"
   />
 </template>
@@ -37,6 +38,7 @@ import {
   useTemplateRef,
 } from '#imports'
 import { UnLazyImage } from '#components'
+import { warnOnce } from '../utils/warnOnce'
 import type { ImageOptions } from '@nuxt/image'
 import type { MagicImageModifiers, MagicImageRuntimeConfig } from '../../module'
 
@@ -51,6 +53,9 @@ interface MagicImageProps {
   priority?: boolean
   sizes?: Record<string, string | number> | string
   autoSizes?: boolean
+  loading?: 'lazy' | 'eager'
+  lazyLoad?: boolean
+  /** @deprecated Use `lazyLoad` instead. */
   lazyload?: boolean
 }
 
@@ -74,8 +79,17 @@ const {
   priority = false,
   sizes,
   autoSizes = true,
-  lazyload = true,
+  loading,
+  // Vue casts an absent boolean prop to `false` unless it has a default.
+  lazyLoad = undefined,
+  lazyload = undefined,
 } = defineProps<MagicImageProps>()
+
+if (import.meta.dev && lazyload !== undefined) {
+  warnOnce(
+    '[magic-image] The `lazyload` prop is deprecated. Use `lazyLoad` instead.'
+  )
+}
 
 const emit = defineEmits<{ loaded: [] }>()
 
@@ -92,11 +106,14 @@ const sources = computed(() =>
   })
 )
 
+const mayLoad = computed(() => lazyLoad ?? lazyload ?? true)
+
 const sizesAttribute = computed(() => {
   if (!autoSizes) {
     return sources.value?.sizes
   }
-  return lazyload ? 'auto' : undefined
+  // `auto` is only valid on a lazy loaded image.
+  return loading === 'eager' || !mayLoad.value ? undefined : 'auto'
 })
 
 const id = useId()
