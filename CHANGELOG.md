@@ -6,9 +6,45 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING** – Require `@unlazy/nuxt` `^3.0.0` (was `^2.0.1`). The `loaded` event and the `data-loaded` attribute behave as before.
+- Every placeholder URL ends in a fragment that is unique to its image. A `placeholderSrc` that already has a fragment is passed on unchanged.
+- A `preload` image switches to `loading="eager"` once Unlazy swaps in the real source. It kept `loading="lazy"` before.
+- An image that fails to load keeps its placeholder and gets a `data-error` attribute until a later load succeeds.
+- Unlazy prints its warning about a lazy loaded LCP element in development only. Production builds no longer log it.
+
+### Deprecated
+
+- `lazyload`, in favour of `lazyLoad`, the name of the Unlazy prop it is passed to. The old name keeps working and logs a warning in development. Both behave as `lazyload` always did: `false` holds the image on its placeholder until the prop turns `true`, unless `preload` is set. The README described it as a switch for lazy loading, which it never was.
+
+### Fixed
+
+- Off-screen images stay on their placeholder until they near the viewport. All images shared one placeholder URL, which the browser serves from memory once it has loaded, so most images loaded right away wherever they were on the page.
+- Changing `src` on an image that has already loaded now loads the new source. With Unlazy v2 the image stayed on the first one. `loaded` still fires once per component.
+
 ### Added
 
+- `loading` prop, passed to Unlazy and `'lazy'` by default. `loading="eager"` loads the image right after hydration with `fetchpriority="high"`, also when it is off-screen. With `autoSizes` off as well, `srcset` and `sizes` are rendered into the server HTML and there is no placeholder.
 - `priority` prop for the LCP image. It renders a plain `<img>` with `src`, `srcset` and `sizes` in the server HTML, `loading="eager"`, `fetchpriority="high"` and a `<link rel="preload">` with high fetch priority, so the image paints before hydration instead of waiting for Unlazy to apply the `srcset`. No placeholder and no `autoSizes` in this mode; pass `sizes` for the layout. `loaded` still fires, also when the image finished before hydration.
+
+### Migration
+
+Update the peer dependency in your app.
+
+```sh
+pnpm add @unlazy/nuxt@^3.0.0
+```
+
+Rename `:lazyload` to `:lazy-load` in your templates. The old name still works, and logs a deprecation warning in development.
+
+If you turned `lazyload` off to load an image right away, use `loading="eager"` instead. `lazyLoad` holds the image back.
+
+If you select images by `[loading="lazy"]` in CSS or JavaScript, a `preload` image stops matching once it has loaded. Select by class or by `data-loaded` instead.
+
+If several images share one remote `placeholderSrc`, they still load right away. Give each image its own placeholder URL, or use a data URI.
+
+If your app also uses Unlazy directly, follow the [Unlazy migration guide](https://unlazy.byjohann.dev/guide/migration.html). Unlazy v3 is ESM only, requires Nuxt 4 and folds `@unlazy/core` into `unlazy`.
 
 ## [1.0.0] - 2026-08-19
 

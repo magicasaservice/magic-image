@@ -43,6 +43,34 @@ Unlazy applies the `srcset` with JavaScript, so a lazy image only paints after h
 </template>
 ```
 
+### Eager images
+
+Set `loading="eager"` for an image that should load without waiting for the viewport. The image keeps its placeholder, and Unlazy loads it right after hydration with `fetchpriority="high"`. Pass `fetchpriority="auto"` to keep the browser’s default priority.
+
+```vue
+<template>
+  <magic-image
+    src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+    loading="eager"
+  />
+</template>
+```
+
+If you turn `autoSizes` off as well, `srcset` and `sizes` are rendered into the server HTML and there is no placeholder.
+
+### Held images
+
+Set `lazyLoad` to `false` to hold an image on its placeholder, such as a slide that is not active yet. The image loads as soon as `lazyLoad` turns `true`, wherever it is on the page.
+
+```vue
+<template>
+  <magic-image
+    src="https://images.unsplash.com/photo-1694444070793-13db645409f4"
+    :lazy-load="false"
+  />
+</template>
+```
+
 ---
 
 ## Installation
@@ -96,7 +124,7 @@ Both peer dependencies have to be installed manually. Each one augments your app
 | Package                                                    | Version  |
 | ---------------------------------------------------------- | -------- |
 | [@nuxt/image](https://www.npmjs.com/package/@nuxt/image)   | `^2.0.0` |
-| [@unlazy/nuxt](https://www.npmjs.com/package/@unlazy/nuxt) | `^2.0.1` |
+| [@unlazy/nuxt](https://www.npmjs.com/package/@unlazy/nuxt) | `^3.0.0` |
 
 ---
 
@@ -116,7 +144,10 @@ Both peer dependencies have to be installed manually. Each one augments your app
 | `preload`        | `boolean`                                    | `false`        | Add `<link rel="preload">` to `<head>`                        |
 | `priority`       | `boolean`                                    | `false`        | Render for LCP: `srcset` in the server HTML, eager, preloaded |
 | `autoSizes`      | `boolean`                                    | `true`         | Measure the element instead of using the declared `sizes`     |
-| `lazyload`       | `boolean`                                    | `true`         | Enable lazy loading                                           |
+| `loading`        | `'lazy' \| 'eager'`                          | `'lazy'`       | Load near the viewport, or right away with `'eager'`          |
+| `lazyLoad`       | `boolean`                                    | `true`         | Hold the image on its placeholder while `false`               |
+
+`loading` and `lazyLoad` are passed to Unlazy unchanged and behave like its [props of the same name](https://unlazy.byjohann.dev/integrations/#unlazyimage-props). `lazyload` is a deprecated alias of `lazyLoad`: it still works, and logs a warning in development.
 
 ### Options
 
@@ -160,7 +191,11 @@ The same `sizes` value also decides which srcset candidates are generated, and t
 
 Both paths describe the element’s **layout** width. An image painted with `object-fit: cover` covers more width than its box whenever the box is taller than the image’s own aspect ratio. Lay such an image out at the size the crop paints, or every candidate is measured against a box narrower than what ends up on screen.
 
-`sizes="auto"` is only valid on a lazy loaded image. With `lazyload` off, no `sizes` attribute is rendered and the browser assumes the image spans the full viewport width.
+`sizes="auto"` is only valid on a lazy loaded image. With `loading="eager"`, the server HTML has no `sizes` attribute, and Unlazy sets it to the measured width right before it applies the `srcset`.
+
+Unlazy loads the real image once the placeholder has loaded, and a browser loads a placeholder it has already seen at once, even off-screen. Magic Image therefore appends a unique fragment to every `placeholderSrc`, so no two images share one. A placeholder that already has a fragment is passed on unchanged.
+
+The fragment separates data URIs, but Chrome ignores it for remote URLs. If you use a remote placeholder, give every image its own URL, or the images sharing one load right away.
 
 ---
 
