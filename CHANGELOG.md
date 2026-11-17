@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-17
+
 ### Changed
 
 - **BREAKING** – Require `@unlazy/nuxt` `^3.0.0` (was `^2.0.1`). The `loaded` event and the `data-loaded` attribute behave as before.
@@ -26,7 +28,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `loading` prop, passed to Unlazy and `'lazy'` by default. `loading="eager"` loads the image right after hydration with `fetchpriority="high"`, also when it is off-screen. With `autoSizes` off as well, `srcset` and `sizes` are rendered into the server HTML and there is no placeholder.
-- `priority` prop for the LCP image. It renders a plain `<img>` with `src`, `srcset` and `sizes` in the server HTML, `loading="eager"`, `fetchpriority="high"` and a `<link rel="preload">` with high fetch priority, so the image paints before hydration instead of waiting for Unlazy to apply the `srcset`. No placeholder and no `autoSizes` in this mode; pass `sizes` for the layout. `loaded` still fires, also when the image finished before hydration.
 
 ### Migration
 
@@ -45,6 +46,33 @@ If you select images by `[loading="lazy"]` in CSS or JavaScript, a `preload` ima
 If several images share one remote `placeholderSrc`, they still load right away. Give each image its own placeholder URL, or use a data URI.
 
 If your app also uses Unlazy directly, follow the [Unlazy migration guide](https://unlazy.byjohann.dev/guide/migration.html). Unlazy v3 is ESM only, requires Nuxt 4 and folds `@unlazy/core` into `unlazy`.
+
+## [1.1.0] - 2026-10-16
+
+### Added
+
+- `priority` prop for the LCP image. It renders a plain `<img>` with `src`, `srcset` and `sizes` in the server HTML, `loading="eager"`, `fetchpriority="high"` and a `<link rel="preload">` with high fetch priority, so the image paints before hydration instead of waiting for Unlazy to apply the `srcset`. No placeholder and no `autoSizes` in this mode; pass `sizes` for the layout. `loaded` still fires, also when the image finished before hydration.
+
+### Changed
+
+- Require `@nuxt/kit` `^4.6.1` (was `^4.4.2`) and `ufo` `^1.6.4` (was `^1.6.3`).
+- Type checking of the playground and the test fixture gates a release, next to the tests and the build.
+
+## [1.0.2] - 2026-08-19
+
+### Changed
+
+- Tighten and reformat the README. The published module behaves as in 1.0.1.
+
+## [1.0.1] - 2026-08-19
+
+### Fixed
+
+- The `peerDependenciesMeta` key in `package.json` was misspelled as `peerDependencyMeta`.
+
+### Changed
+
+- Restructure the README.
 
 ## [1.0.0] - 2026-08-19
 
@@ -158,7 +186,11 @@ Staying on `@unlazy/nuxt` v1 with this release will make `<MagicImage>` silently
 
 Releases before `0.0.11` predate this changelog. See the [release history](https://github.com/magicasaservice/magic-image/releases) for details.
 
-[Unreleased]: https://github.com/magicasaservice/magic-image/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/magicasaservice/magic-image/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/magicasaservice/magic-image/compare/1.1.0...2.0.0
+[1.1.0]: https://github.com/magicasaservice/magic-image/compare/1.0.2...1.1.0
+[1.0.2]: https://github.com/magicasaservice/magic-image/compare/1.0.1...1.0.2
+[1.0.1]: https://github.com/magicasaservice/magic-image/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/magicasaservice/magic-image/compare/0.2.0...1.0.0
 [0.2.0]: https://github.com/magicasaservice/magic-image/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/magicasaservice/magic-image/compare/0.0.14...0.1.0
