@@ -15,7 +15,7 @@
     v-else
     class="magic-image"
     :data-loaded="loaded"
-    :placeholder-src="placeholderSrc"
+    :placeholder-src="placeholder"
     :src-set="sources?.srcset"
     :sizes="sizesAttribute"
     :auto-sizes="autoSizes"
@@ -31,6 +31,7 @@ import {
   onMounted,
   ref,
   useHead,
+  useId,
   useImage,
   useRuntimeConfig,
   useTemplateRef,
@@ -97,6 +98,14 @@ const sizesAttribute = computed(() => {
   }
   return lazyload ? 'auto' : undefined
 })
+
+const id = useId()
+
+// A URL that already loaded is served from memory and fires `load` at once,
+// even off-screen, which starts the real image. So no two images share one.
+const placeholder = computed(() =>
+  placeholderSrc.includes('#') ? placeholderSrc : `${placeholderSrc}#${id}`
+)
 
 if (preload || priority) {
   useHead({

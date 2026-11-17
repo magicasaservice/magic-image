@@ -64,9 +64,28 @@
       priority
       @loaded="brokenLoads++"
     />
+    <MagicImage
+      :data-test-id="TestId.FragmentPlaceholderImage"
+      src="/test/photo.jpg"
+      provider="maas"
+      placeholder-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==#own"
+    />
     <span id="hydrated" :data-hydrated="hydrated" />
     <span id="priority-loads">{{ priorityLoads }}</span>
     <span id="broken-loads">{{ brokenLoads }}</span>
+    <!-- Loading in the browser: a local image in view and one far below the
+         fold. -->
+    <MagicImage
+      :data-test-id="TestId.VisibleLazyImage"
+      src="/pixel.png"
+      provider="mux"
+    />
+    <div style="height: 10000px" />
+    <MagicImage
+      :data-test-id="TestId.OffscreenLazyImage"
+      src="/pixel.png"
+      provider="mux"
+    />
   </div>
 </template>
 

@@ -8,6 +8,10 @@ function imgByTestId(html: string, testId: TestId) {
   return html.match(image)?.[0] ?? ''
 }
 
+function placeholderOf(html: string, testId: TestId) {
+  return imgByTestId(html, testId).match(/\ssrc="([^"]*)"/)?.[1] ?? ''
+}
+
 function imagePreloads(html: string) {
   return html.match(/<link[^>]*rel="preload"[^>]*as="image"[^>]*>/g) ?? []
 }
@@ -48,6 +52,24 @@ describe('magic-image module', async () => {
     it('omits sizes when eager, since auto needs lazy loading', async () => {
       const html = await $fetch('/')
       expect(imgByTestId(html, TestId.EagerImage)).not.toMatch(/\ssizes=/)
+    })
+  })
+
+  describe('placeholder', () => {
+    it('gives every image its own placeholder URL', async () => {
+      const html = await $fetch('/')
+      const first = placeholderOf(html, TestId.AutoSizes)
+      const second = placeholderOf(html, TestId.ModuleSizes)
+      expect(first).toMatch(/^data:image\/gif;base64,[^#]+#.+$/)
+      expect(second).toMatch(/^data:image\/gif;base64,[^#]+#.+$/)
+      expect(first).not.toBe(second)
+    })
+
+    it('leaves a placeholder that carries its own fragment untouched', async () => {
+      const html = await $fetch('/')
+      expect(placeholderOf(html, TestId.FragmentPlaceholderImage)).toMatch(
+        /^data:image\/gif;base64,[^#]+#own$/
+      )
     })
   })
 
